@@ -37,16 +37,16 @@ APIs
 
 ## ⚙️ Installation & Setup
 
-### 1️⃣ Clone the Repository
+1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/izharisnia/ai-voice-agent.git
 cd ai-voice-agent
 
-### 2️⃣ Install Dependencies
+2️⃣ Install Dependencies
 pip install -r requirements.txt
 
 
-### 3️⃣ Environment Variables
+3️⃣ Environment Variables
 Create a .env file in the root folder:
 
 ASSEMBLYAI_API_KEY=your_assemblyai_api_key
@@ -54,7 +54,7 @@ MURF_API_KEY=your_murf_api_key
 GEMINI_API_KEY=your_gemini_api_key
 
 
-### 4️⃣ Run the Server
+4️⃣ Run the Server
 uvicorn main:app --reload
 
 Open your browser and go to:
