@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local data 
+uploads/
+transcripts/
+screenshots/
+
+# OS junk
+.DS_Store
+
+# Environment variables (SECRETS!)
+.env
+
+# Node (if any)
+node_modules/
+
+# IDEs
+.vscode/
+.idea/
