@@ -1,38 +1,48 @@
 # 🎙️ AI Voice Agent
 
-An interactive **AI-powered voice assistant** built with **FastAPI**, **JavaScript**, and **WaveSurfer.js** that can listen to your speech, transcribe it using **AssemblyAI**, process it with **Google Gemini**, and reply back with a **Murf.ai generated voice** — all in real time.
+A conversational AI voice agent built with **FastAPI**, **AssemblyAI**, **Murf TTS**, and **Google Gemini**.  
+This project was created as part of the **30 Days of AI Voice Agents Challenge**.
+
+
 
 ## 🚀 Features
-- 🎤 **Real-time Voice Conversation** – Speak to the bot, and it listens + replies instantly.
-- 📝 **Accurate Transcription** – Powered by **AssemblyAI** Speech-to-Text API.
-- 🤖 **Smart Responses** – Generated via **Google Gemini** LLM.
-- 🔊 **Natural Voice Output** – Murf.ai Text-to-Speech integration.
-- 📜 **Chat History Sidebar** – View previous exchanges in the session.
-- 🌐 **Electric Glow UI** – Stylish animated buttons & neon theme.
-- 📱 **Responsive Design** – Works on desktop and mobile.
+- 🎤 **Voice Conversations** – Speak to the bot, and it responds with speech.
+- 📝 **Real-time Transcription** – Powered by AssemblyAI.
+- 🤖 **LLM Responses** – Context-aware replies using Google Gemini.
+- 🗣️ **Text-to-Speech** – Natural AI voices using Murf API.
+- 🧠 **Conversation Memory** – Keeps chat history per session.
+- 📂 **Transcript Download** – Save conversations as `.txt`.
+- ⚡ **Electric Glow UI** – Styled front-end with waveform visualizer.
 
 
-## 🏗️ Project Architecture
-Frontend (HTML + CSS + JS)
-│
-├── index.html (UI + chat history sidebar + mic button)
-├── style.css (Electric Glow Theme)
-└── scripts.js (Handles recording, transcription, TTS, chat updates)
-│
-Backend (FastAPI - Python)
-│
-├── main.py
-│ ├── /agent/chat/{session_id} → Handles audio input → Transcribes → Sends to Gemini → Converts to TTS
-│ ├── /generate-tts → Converts custom text to voice
-│ ├── /transcribe/file → Returns transcription from audio
-│ └── /agent/clear/{session_id} → Clears chat history
-│
-APIs
-│
-├── AssemblyAI (Speech-to-Text)
-├── Google Gemini (Text Generation)
-└── Murf.ai (Text-to-Speech)
 
+## 🏗️ Architecture
+Frontend (HTML/CSS/JS)
+|
+|--> FastAPI Backend
+|--> AssemblyAI (Speech-to-Text)
+|--> Gemini (LLM Responses)
+|--> Murf (Text-to-Speech)
+|
+└── Conversation History (in-memory)
+
+## 📂 Project Structure
+voice-agent/
+│── main.py # FastAPI entrypoint
+│── requirements.txt
+│── .env.example
+│── templates/
+│ └── index.html
+│── static/
+│ ├── style.css
+│ └── scripts.js
+│── services/
+│ ├── tts_service.py and stt_service.py # Murf TTS and STT logic
+│ └── llm_service.py # Gemini logic
+│── models/
+│ └── schemas.py # (optional) Pydantic schemas
+│── uploads/
+│── transcripts/
 
 
 ## ⚙️ Installation & Setup
@@ -82,4 +92,8 @@ http://127.0.0.1:8000
 1. Ensure your .env file contains all required API keys before starting.
 2. The app automatically restarts recording after each AI reply for smooth conversations.
 
-Built by Isnia Izhar
+🤝 Contributing
+Pull requests are welcome! For major changes, open an issue first to discuss.
+
+📝 License
+MIT License © 2025 Isnia Izhar
