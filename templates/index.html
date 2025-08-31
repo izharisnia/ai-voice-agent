@@ -1,193 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>⚡ Electric Voice Agent</title>
-    <link rel="stylesheet" href="/static/style.css" />
-    <script src="https://unpkg.com/wavesurfer.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>⚡ Electric Voice Agent</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="https://unpkg.com/wavesurfer.js"></script>
 </head>
 <body>
-    <div class="app-grid">
-        <aside id="chatHistory" class="card sidebar">
-            <div class="history-header">
-                <h3>Conversations</h3>
-                <div class="history-controls">
-                    <button id="newChatBtn" class="glow-button small">+ New Chat</button>
-                    <button id="clearHistoryBtn" class="glow-button small">Clear</button>
-                </div>
+  <div class="app-grid">
+    <aside id="chatHistory" class="card sidebar">
+      <div class="history-header">
+        <h3>Conversations</h3>
+        <div class="history-controls">
+          <button id="newChatBtn" class="glow-button small">+ New Chat</button>
+          <button id="clearHistoryBtn" class="glow-button small">Clear</button>
+        </div>
+      </div>
+      <ul id="historyList" class="history-list"></ul>
+    </aside>
+
+    <main class="container">
+      <section class="card glow-card agent-card">
+        <h2>🤖 Conversational Voice Agent</h2>
+
+        <div class="controls">
+          <div class="record-row">
+            <button id="recordToggleBtn" class="glow-button primary" aria-pressed="false">
+              <span id="recordBtnLabel">Start Recording</span>
+            </button>
+            <div class="status-pill" id="statusText">
+              <span class="status-dot idle"></span> Idle
             </div>
-            <ul id="historyList" class="history-list"></ul>
-        </aside>
-        <main class="container">
-            <!-- <section class="card glow-card">
-                <h2>🤖 AI-Powered Voice Agent</h2>
-                <div class="input-group">
-                    <input type="text" id="textInput" placeholder="Type something like 'Hello, I am your assistant'..." />
-                    <select id="languageSelect">
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                        <option value="de">German</option>
-                    </select>
-                </div>
-
-                <div class="audio-player">
-                    <button id="generateBtn" class="glow-button">⚡ Generate Voice</button>
-                    <audio id="audioPlayer" controls preload="auto">
-                        <source id="audioSource" src="" type="audio/mpeg" />
-                    </audio>
-                </div>
-                <div id="waveformTTS" class="waveform"></div>
-            </section> -->
-
-            <!-- <section class="card glow-card">
-                <h2>🎧 Real-Time Echo Bot</h2>
-                <div class="recorder-buttons">
-                    <button id="startBtn" class="glow-button">🎙 Start Recording</button>
-                    <button id="stopBtn" class="glow-button" disabled>⏹ Stop Recording</button>
-                </div>
-
-                <div class="audio-player">
-                    <p style="padding:0.6rem; text-align:center; background-color:#ff4d00; border-radius:8px; color:white;">🔊 LLM Response:</p>
-                    <audio id="llmAudioPlayer" controls style="margin-bottom:12px;"></audio>
-                </div>
-
-                <div id="waveformEcho" class="waveform"></div>
-                <div id="uploadStatus" class="status-text"></div>
-                <a id="downloadLink" class="download-link" style="display:none;" download>⬇ Download Recording</a>
-            </section> -->
-            <!-- Conversational Voice Agent -->
-            <section class="card glow-card">
-            <h2>🎙 Conversational Voice Agent</h2>
-
-            <div class="record-row">
-                <button id="recordToggleBtn" class="mic-toggle" aria-pressed="false" style="display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.8rem 1.5rem;
-  background-color: #ff4d00;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 0 15px #ff4d00, 0 0 25px rgba(255, 77, 0, 0.6);
-  margin-right: 20px;">
-                
-                <span class="mic-label" id="recordBtnLabel">Start Recording</span>
-                </button>
-
-                <span class="status-pill" id="statusText">
-                <span class="status-dot idle"></span>Idle
-                </span>
+            <div class="settings">
+              <button id="settingsBtn" class="glow-button small">⚙️ Keys</button>
             </div>
+          </div>
+        </div>
 
-            <div id="waveformEcho" class="waveform"></div>
+        <div id="waveformEcho" class="waveform big"></div>
 
-            <!-- Hidden player: we auto-play the bot audio -->
-            <audio id="llmAudioPlayer" preload="auto"></audio>
-            </section>
+        <div class="llm-box">
+          <div class="llm-header">🔊 LLM Response:</div>
+          <div id="skillResult" class="skill-result"></div>
+          <audio id="llmAudioPlayer" controls style="display:block; margin-top:12px;"></audio>
+        </div>
+      </section>
 
-            <section class="card glow-card">
-                <h2>📝 Transcription</h2>
-                <div id="transcript" class="transcription-box">
-                    <p class="placeholder">Your transcription will appear here...</p>
-                </div>
-            </section>
+      <section class="card glow-card transcription-card">
+        <h2>📝 Transcription</h2>
+        <div id="transcript" class="transcription-box">
+          <p class="placeholder">Your transcription will appear here...</p>
+        </div>
+      </section>
 
-            <footer>
-                <p>Built by <strong>Isnia Izhar</strong>
-                </p>
-            </footer>
-        </main>
+      <footer>
+        <p>Built by <strong>Isnia Izhar</strong> | #30DaysOfVoiceAgents</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Settings modal (API keys) -->
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Configure API Keys</h3>
+      <label>AssemblyAI Key<br><input id="cfg_assembly" type="text" /></label>
+      <label>Gemini Key<br><input id="cfg_gemini" type="text" /></label>
+      <label>Murf Key<br><input id="cfg_murf" type="text" /></label>
+      <label>News API Key (optional)<br><input id="cfg_news" type="text" /></label>
+      <div class="modal-actions">
+        <button id="saveKeysBtn" class="glow-button small">Save</button>
+        <button id="closeModalBtn" class="glow-button small">Close</button>
+      </div>
     </div>
+  </div>
 
-    <script src="/static/scripts.js" defer></script>
+  <script src="/static/scripts.js" defer></script>
 </body>
 </html>
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>⚡ Electric Voice Agent</title>
-    <link rel="stylesheet" href="/static/style.css" />
-    <script src="https://unpkg.com/wavesurfer.js"></script>
-</head>
-<body>
-    <div class="app-grid">
-       
-        <aside id="chatHistory" class="card" style="grid-column: 1; min-width: 250px;" >
-            <div class="history-header">
-                <h3>Chats</h3>
-                <button id="clearHistoryBtn" class="glow-button small">Clear</button>
-            </div>
-            <ul id="historyList" class="history-list"></ul>
-        </aside>
-
-       
-        <main class="container">
-     
-            <section class="card glow-card">
-                <h2>🤖 AI-Powered Voice Agent</h2>
-                <div class="input-group">
-                    <input type="text" id="textInput" placeholder="Type something like 'Hello, I am your assistant'..." />
-                    <select id="languageSelect">
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                        <option value="de">German</option>
-                    </select>
-                </div>
-
-                <div class="audio-player">
-                    <button onclick="sendText()" class="glow-button">⚡ Generate Voice</button>
-                    <audio id="audioPlayer" controls preload="auto">
-                        <source id="audioSource" src="" type="audio/mpeg" />
-                    </audio>
-                </div>
-                <div id="waveformTTS" class="waveform"></div>
-            </section>
-
-            <section class="card glow-card">
-                <h2>🎧 Real-Time Echo Bot</h2>
-                <div class="recorder-buttons">
-                    <button id="startBtn" class="glow-button">🎙 Start Recording</button>
-                    <button id="stopBtn" class="glow-button" disabled>⏹ Stop Recording</button>
-                </div>
-
-                <div class="audio-player">
-                    <p style="padding: 0.8rem; text-align: center; background-color: #ff4d00; border: none; border-radius: 8px; color: white;">🔊 LLM Response:</p>
-                    <audio style="margin-bottom: 25px;" id="llmAudioPlayer" controls></audio>
-                </div>
-
-                <div id="waveformEcho" class="waveform"></div>
-                <div id="uploadStatus" class="status-text"></div>
-                <a id="downloadLink" class="download-link" style="display:none;" download>⬇ Download Recording</a>
-            </section>
-
-       
-            <section class="card glow-card">
-                <h2>📝 Transcription</h2>
-                <div id="transcript" class="transcription-box">
-                    <p class="placeholder">Your transcription will appear here...</p>
-                </div>
-            </section>
-
-            <footer>
-                <p>Built by <strong>Isnia Izhar</strong> |
-                    <a href="https://linkedin.com/in/isnia-izhar-3b2488260/" target="_blank">LinkedIn</a> |
-                    #30DaysOfVoiceAgents
-                </p>
-            </footer>
-        </main>
-    </div>
-
-    <script src="/static/scripts.js" defer></script>
-</body>
-</html>
- -->

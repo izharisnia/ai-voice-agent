@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>WS Echo Test</h3>
+    <input id="msg" placeholder="Type something"/><button id="send">Send</button>
+    <pre id="log"></pre>
+    <script>
+      const log = (m)=>document.getElementById('log').textContent += m + "\n";
+      const ws = new WebSocket("ws://" + location.host + "/ws");
+      ws.onopen = ()=>log("Connected");
+      ws.onmessage = (e)=>log("<< " + e.data);
+      ws.onclose = ()=>log("Closed");
+      document.getElementById('send').onclick = ()=>{
+        const v = document.getElementById('msg').value;
+        log(">> " + v);
+        ws.send(v);
+      };
+    </script>
+  </body>
+</html>
