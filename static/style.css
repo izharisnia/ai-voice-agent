@@ -70,7 +70,13 @@ body{
 .status-dot{ width:10px; height:10px; border-radius:50%; display:inline-block}
 .status-dot.idle{ background:#6b6b6b}
 .status-dot.recording{ background:#ff4d00; box-shadow:0 0 8px #ff4d00}
+.status-dot.processing{ background:#ffd700; box-shadow:0 0 8px #ffd700; animation: pulse 1s infinite alternate;}
 .status-dot.playing{ background:#00ff99; box-shadow:0 0 8px #00ff99}
+
+@keyframes pulse {
+  from { opacity: 0.4; }
+  to { opacity: 1.0; }
+}
 
 /* Waveform */
 .waveform.big{ height:110px; margin-bottom:10px; border-radius:8px; background:#080808; box-shadow: inset 0 0 12px rgba(255,0,255,0.04);}

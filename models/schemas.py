@@ -1,27 +1,20 @@
 from pydantic import BaseModel
-from typing import List, Optional
-
+from typing import List, Optional, Dict
 
 class TTSRequest(BaseModel):
     text: str
-    language_code: str
-
+    language_code: str = "en"
 
 class TTSResponse(BaseModel):
     message: str
     audio_url: str
 
-
 class ChatResponse(BaseModel):
     transcript: str
     llm_response: str
-    audio_url: Optional[str]
-    history: List[dict]
+    audio_url: Optional[str] = ""
+    history: List[Dict[str, str]]
 
-
-# 👇 Add this so the import works
-class AgentResponse(BaseModel):
-    transcript: str
-    llm_response: str
-    audio_url: Optional[str]
-    history: List[dict]
+class ClearResponse(BaseModel):
+    cleared: bool
+    session: str

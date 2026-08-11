@@ -1,355 +1,17 @@
-
-// // =============================
-// // Day 12: single toggle record button
-// // =============================
-// let recWaveform;
-// let mediaRecorder;
-// let audioChunks = [];
-// let STATE = "idle"; // 'idle' | 'recording' | 'playing'
-// let SESSION_ID = null;
-
-// function initRecWaveform() {
-//   try {
-//     recWaveform = WaveSurfer.create({
-//       container: '#waveformEcho',
-//       waveColor: '#ff00ff',
-//       progressColor: '#ff6600',
-//       height: 80
-//     });
-//   } catch (e) { console.warn("WaveSurfer REC init failed:", e); }
-// }
-
-// function setState(next) {
-//   STATE = next;
-//   const btn = document.getElementById("recordToggleBtn");
-//   const label = document.getElementById("recordBtnLabel");
-//   const status = document.getElementById("statusText");
-//   const dot = status?.querySelector(".status-dot");
-
-//   if (!btn || !label || !status || !dot) return;
-
-//   if (STATE === "idle") {
-//     btn.classList.remove("is-recording");
-//     btn.setAttribute("aria-pressed", "false");
-//     label.textContent = "Start Recording";
-//     status.innerHTML = `<span class="status-dot idle"></span> Idle`;
-//   } else if (STATE === "recording") {
-//     btn.classList.add("is-recording");
-//     btn.setAttribute("aria-pressed", "true");
-//     label.textContent = "Stop & Send";
-//     status.innerHTML = `<span class="status-dot recording"></span> Recording...`;
-//   } else if (STATE === "playing") {
-//     btn.classList.remove("is-recording");
-//     btn.setAttribute("aria-pressed", "false");
-//     label.textContent = "Playing...";
-//     status.innerHTML = `<span class="status-dot playing"></span> Playing reply`;
-//   }
-// }
-
-// async function toggleRecording() {
-//   if (STATE === "idle") {
-//     await startRecording();
-//   } else if (STATE === "recording") {
-//     stopRecording();
-//   }
-// }
-
-// async function startRecording() {
-//   try {
-//     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-//     mediaRecorder = new MediaRecorder(stream);
-//     audioChunks = [];
-
-//     mediaRecorder.ondataavailable = (e) => {
-//       if (e.data && e.data.size > 0) audioChunks.push(e.data);
-//     };
-
-//     mediaRecorder.onstop = async () => {
-//       const blob = new Blob(audioChunks, { type: "audio/webm" });
-//       if (recWaveform) recWaveform.load(URL.createObjectURL(blob));
-//       await sendAudioToChat(blob);
-//     };
-
-//     mediaRecorder.start();
-//     setState("recording");
-//   } catch (err) {
-//     console.error("startRecording error:", err);
-//     alert("Microphone access denied or not available.");
-//     setState("idle");
-//   }
-// }
-
-// function stopRecording() {
-//   try {
-//     if (mediaRecorder && mediaRecorder.state !== "inactive") {
-//       mediaRecorder.stop();
-//     }
-//   } catch (e) { /* no-op */ }
-// }
-
-// // ---- session id helper (unchanged if you already have it) ----
-// function getSessionId() {
-//   const params = new URLSearchParams(window.location.search);
-//   let sessionId = params.get("session");
-//   if (!sessionId) {
-//     sessionId = crypto.randomUUID();
-//     params.set("session", sessionId);
-//     window.history.replaceState({}, "", `${location.pathname}?${params}`);
-//   }
-//   return sessionId;
-// }
-
-// // ---- DOM Ready ----
-// document.addEventListener("DOMContentLoaded", () => {
-//   initRecWaveform();
-
-//   SESSION_ID = getSessionId();
-
-//   const toggleBtn = document.getElementById("recordToggleBtn");
-//   if (toggleBtn) toggleBtn.addEventListener("click", toggleRecording);
-
-//   // keep your existing New Chat / Clear History listeners
-//   const newChatBtn = document.getElementById("newChatBtn");
-//   const clearHistoryBtn = document.getElementById("clearHistoryBtn");
-
-//   if (newChatBtn) {
-//     newChatBtn.addEventListener("click", () => {
-//       SESSION_ID = crypto.randomUUID();
-//       const params = new URLSearchParams(window.location.search);
-//       params.set("session", SESSION_ID);
-//       window.history.replaceState({}, "", `${location.pathname}?${params}`);
-//       document.getElementById("historyList").innerHTML = "";
-//       document.getElementById("transcript").innerHTML =
-//         `<p class="placeholder">New conversation started...</p>`;
-//       setState("idle");
-//     });
-//   }
-
-//   if (clearHistoryBtn) {
-//     clearHistoryBtn.addEventListener("click", async () => {
-//       if (!confirm("Clear history for this session?")) return;
-//       try {
-//         await fetch(`/agent/clear/${SESSION_ID}`, { method: "POST" });
-//         document.getElementById("historyList").innerHTML = "";
-//         document.getElementById("transcript").innerHTML =
-//           `<p class="placeholder">History cleared.</p>`;
-//       } catch (err) {
-//         console.error("Error clearing history:", err);
-//       } finally {
-//         setState("idle");
-//       }
-//     });
-//   }
-
-//   setState("idle");
-// });
-
-// // ---- sendAudioToChat (reuse your working version; only minor tweaks below) ----
-// async function sendAudioToChat(audioBlob) {
-//   const fd = new FormData();
-//   const file = new File([audioBlob], `recording_${Date.now()}.webm`, { type: 'audio/webm' });
-//   fd.append("file", file);
-
-//   try {
-//     const res = await fetch(`/agent/chat/${SESSION_ID}`, { method: "POST", body: fd });
-//     if (!res.ok) {
-//       const txt = await res.text().catch(()=>null);
-//       throw new Error(txt || `Server returned ${res.status}`);
-//     }
-//     const data = await res.json();
-
-//     // update transcript
-//     const transcriptBox = document.getElementById("transcript");
-//     transcriptBox.innerHTML = `
-//       <p><strong>You said:</strong> ${escapeHtml(data.transcript || "[no transcript]")}</p>
-//       <p><strong>LLM replied:</strong> ${escapeHtml(data.llm_response || "[no reply]")}</p>
-//     `;
-
-//     // update sidebar
-//     if (Array.isArray(data.history)) updateChatHistorySidebar(data.history);
-
-//     // play LLM audio automatically
-//     const audioPlayer = document.getElementById("llmAudioPlayer");
-//     if (data.audio_url) {
-//       audioPlayer.src = data.audio_url;
-//       setState("playing");
-//       try { await audioPlayer.play(); } catch (e) { console.warn("Autoplay blocked:", e); setState("idle"); }
-//       audioPlayer.onended = () => {
-//         setState("idle");
-//         // optional: auto re-start for next user turn
-//         setTimeout(() => startRecording(), 250);
-//       };
-//     } else {
-//       setState("idle");
-//       console.warn("No audio URL returned from server.");
-//     }
-//   } catch (err) {
-//     console.error("sendAudioToChat error:", err);
-//     alert("Conversation error: " + (err.message || err));
-//     setState("idle");
-//   }
-// }
-
-// // ---- utilities: history + xss-escape (use your existing working ones) ----
-// function updateChatHistorySidebar(historyArr) {
-//   const list = document.getElementById("historyList");
-//   list.innerHTML = "";
-
-//   for (let i = historyArr.length - 2; i >= 0; i -= 2) {
-//     const userMsg = historyArr[i] && historyArr[i].role === "user" ? historyArr[i].content : "";
-//     const assistantMsg = historyArr[i+1] ? historyArr[i+1].content : "";
-
-//     const li = document.createElement("li");
-//     li.className = "history-item";
-//     const snippet = userMsg.length > 80 ? userMsg.slice(0,77) + "..." : userMsg;
-//     li.innerHTML = `<div class="meta">You</div><div class="snippet">${escapeHtml(snippet)}</div>`;
-//     li.addEventListener("click", () => {
-//       document.getElementById("transcript").innerHTML = `
-//         <p><strong>You said:</strong> ${escapeHtml(userMsg)}</p>
-//         <p><strong>LLM replied:</strong> ${escapeHtml(assistantMsg)}</p>
-//       `;
-//     });
-//     list.appendChild(li);
-//   }
-
-//   if (historyArr.length % 2 === 1) {
-//     const last = historyArr[historyArr.length - 1];
-//     if (last) {
-//       const li = document.createElement("li");
-//       li.className = "history-item";
-//       li.innerHTML = `<div class="meta">${escapeHtml(last.role)}</div><div class="snippet">${escapeHtml(last.content)}</div>`;
-//       list.insertBefore(li, list.firstChild);
-//     }
-//   }
-
-//   list.scrollTop = 0;
-// }
-
-// function escapeHtml(unsafe) {
-//   if (!unsafe) return "";
-//   return String(unsafe)
-//     .replaceAll("&", "&amp;")
-//     .replaceAll("<", "&lt;")
-//     .replaceAll(">", "&gt;")
-//     .replaceAll('"', "&quot;")
-//     .replaceAll("'", "&#039;");
-// }
-
-// // =============================
-// // Day 16: WebSocket Streaming Audio
-// // =============================
-// let streamWS;
-// let streamRecorder;
-
-// async function startStreaming() {
-//   streamWS = new WebSocket("ws://127.0.0.1:8000/ws/stream-audio");
-
-//   streamWS.onopen = async () => {
-//     console.log("✅ Connected to /ws/stream-audio");
-
-//     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-//     streamRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
-
-//     streamRecorder.ondataavailable = async (event) => {
-//       if (event.data.size > 0 && streamWS.readyState === WebSocket.OPEN) {
-//         const arrayBuffer = await event.data.arrayBuffer();
-//         streamWS.send(arrayBuffer);
-//       }
-//     };
-
-//     // send chunks every 250ms
-//     streamRecorder.start(250);
-//     console.log("🎤 Streaming started...");
-//   };
-
-//   streamWS.onclose = () => {
-//     console.log("❌ Streaming socket closed.");
-//   };
-// }
-
-// function stopStreaming() {
-//   if (streamRecorder && streamRecorder.state !== "inactive") {
-//     streamRecorder.stop();
-//   }
-//   if (streamWS && streamWS.readyState === WebSocket.OPEN) {
-//     streamWS.close();
-//   }
-//   console.log("⏹ Streaming stopped.");
-// }
-
-// // =============================
-// // Day 16: Streaming audio over WebSocket
-// // =============================
-// let wsStream;
-// let mediaRecorderStream;
-
-// function startStreaming() {
-//   if (wsStream && wsStream.readyState === WebSocket.OPEN) {
-//     console.warn("Already streaming...");
-//     return;
-//   }
-
-//   wsStream = new WebSocket("ws://127.0.0.1:8000/ws/stream-audio");
-
-//   wsStream.onopen = async () => {
-//     console.log("✅ WebSocket connected for streaming");
-
-//     // Capture microphone
-//     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-//     mediaRecorderStream = new MediaRecorder(stream);
-
-//     mediaRecorderStream.ondataavailable = (e) => {
-//       if (e.data.size > 0 && wsStream.readyState === WebSocket.OPEN) {
-//         e.data.arrayBuffer().then(buffer => {
-//           wsStream.send(buffer);
-//         });
-//       }
-//     };
-
-//     mediaRecorderStream.start(250); // send every 250ms
-//   };
-
-//   wsStream.onclose = () => {
-//     console.log("❌ WebSocket closed");
-//   };
-
-//   wsStream.onerror = (err) => {
-//     console.error("WebSocket error:", err);
-//   };
-// }
-
-// function stopStreaming() {
-//   if (mediaRecorderStream && mediaRecorderStream.state !== "inactive") {
-//     mediaRecorderStream.stop();
-//   }
-//   if (wsStream && wsStream.readyState === WebSocket.OPEN) {
-//     wsStream.close();
-//   }
-//   console.log("⏹️ Streaming stopped");
-// }
-// =============================
-// Existing: Toggle record button (Day 12–14)
-// =============================
-
-// static/scripts.js
-/* Electric Voice Agent - front-end logic */
-/* Responsibilities:
-   - Recording toggle (single button)
-   - Create session id in URL
-   - Upload recorded audio to /agent/chat/{session}
-   - Show waveform (WaveSurfer)
-   - Settings modal to save API keys to localStorage
-*/
+/* Electric Voice Agent - Client Frontend Script */
 
 let recWaveform = null;
 let mediaRecorder = null;
 let audioChunks = [];
-let STATE = "idle";
+let STATE = "idle"; // 'idle' | 'recording' | 'processing' | 'playing'
 let SESSION_ID = null;
+
+// WebSocket Streaming variables
+let streamWS = null;
 
 function escapeHtml(unsafe) {
     if (!unsafe) return "";
-    return String(unsafe).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    return String(unsafe).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
 function getSessionFromURL() {
@@ -363,117 +25,316 @@ function getSessionFromURL() {
     return s;
 }
 
-function initWaveform() {
+function getSavedKeys() {
     try {
-        recWaveform = WaveSurfer.create({ container: '#waveformEcho', waveColor: '#ff00ff', progressColor:'#ff6600', height:80 });
-    } catch (e) { console.warn("WaveSurfer init failed", e) }
+        return JSON.parse(localStorage.getItem("voiceAgentKeys") || "{}");
+    } catch (e) {
+        return {};
+    }
 }
 
-function setState(s) {
+function getCustomHeaders() {
+    const keys = getSavedKeys();
+    const headers = {};
+    if (keys.assembly) headers["X-AssemblyAI-Key"] = keys.assembly;
+    if (keys.gemini) headers["X-Gemini-Key"] = keys.gemini;
+    if (keys.murf) headers["X-Murf-Key"] = keys.murf;
+    if (keys.news) headers["X-News-Key"] = keys.news;
+    return headers;
+}
+
+function initWaveform() {
+    try {
+        if (!recWaveform && document.getElementById("waveformEcho")) {
+            recWaveform = WaveSurfer.create({
+                container: '#waveformEcho',
+                waveColor: '#00f0ff',
+                progressColor: '#ff007f',
+                height: 80,
+                barWidth: 2,
+                barGap: 3
+            });
+        }
+    } catch (e) {
+        console.warn("WaveSurfer init failed:", e);
+    }
+}
+
+function setState(s, customText) {
     STATE = s;
     const btn = document.getElementById("recordToggleBtn");
     const label = document.getElementById("recordBtnLabel");
     const status = document.getElementById("statusText");
+
     if (!btn || !label || !status) return;
+
     if (s === "idle") {
         btn.classList.remove("is-recording");
-        btn.setAttribute("aria-pressed","false");
+        btn.disabled = false;
+        btn.setAttribute("aria-pressed", "false");
         label.textContent = "Start Recording";
         status.innerHTML = '<span class="status-dot idle"></span> Idle';
     } else if (s === "recording") {
         btn.classList.add("is-recording");
-        btn.setAttribute("aria-pressed","true");
+        btn.disabled = false;
+        btn.setAttribute("aria-pressed", "true");
         label.textContent = "Stop & Send";
         status.innerHTML = '<span class="status-dot recording"></span> Recording...';
+    } else if (s === "processing") {
+        btn.classList.remove("is-recording");
+        btn.disabled = true;
+        label.textContent = "Processing...";
+        status.innerHTML = `<span class="status-dot processing"></span> ${escapeHtml(customText || "Processing...")}`;
     } else if (s === "playing") {
+        btn.classList.remove("is-recording");
+        btn.disabled = false;
         label.textContent = "Playing...";
         status.innerHTML = '<span class="status-dot playing"></span> Playing reply';
     }
 }
 
-async function startRecording() {
+// Load session history from SQLite backend
+async function loadSessionHistory() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-        mediaRecorder.ondataavailable = e => { if (e.data && e.data.size>0) audioChunks.push(e.data); };
-        mediaRecorder.onstop = async () => {
-            const blob = new Blob(audioChunks, { type: "audio/webm" });
-            if (recWaveform) recWaveform.load(URL.createObjectURL(blob));
-            await sendAudioToChat(blob);
-        };
-        mediaRecorder.start();
-        setState("recording");
+        const res = await fetch(`/agent/history/${SESSION_ID}`);
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data.history)) {
+                updateChatHistorySidebar(data.history);
+            }
+        }
     } catch (err) {
-        console.error("startRecording error", err);
-        alert("Microphone not available");
-        setState("idle");
+        console.error("Failed to load session history from DB:", err);
+    }
+}
+
+// Mode router: WebSocket Streaming vs HTTP Upload
+async function startRecording() {
+    const isWSMode = document.getElementById("wsModeToggle")?.checked;
+    if (isWSMode) {
+        await startWebSocketStreaming();
+    } else {
+        await startHTTPRecording();
     }
 }
 
 function stopRecording() {
-    try {
-        if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
-    } catch(e){}
+    const isWSMode = document.getElementById("wsModeToggle")?.checked;
+    if (isWSMode && streamWS) {
+        stopWebSocketStreaming();
+    } else if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+    }
 }
 
-async function sendAudioToChat(blob) {
-    setState("playing"); // optimistic until we get audio
-    const fd = new FormData();
-    const file = new File([blob], `recording_${Date.now()}.webm`, { type:'audio/webm' });
-    fd.append("file", file);
+// ---------------- 1. WebSocket Streaming Logic ----------------
+async function startWebSocketStreaming() {
     try {
-        const res = await fetch(`/agent/chat/${SESSION_ID}`, { method:'POST', body: fd });
-        if (!res.ok) {
-            const txt = await res.text().catch(()=>null);
-            throw new Error(txt || `Server ${res.status}`);
-        }
-        const data = await res.json();
-        // transcript
-        const tbox = document.getElementById("transcript");
-        tbox.innerHTML = `<p><strong>You said:</strong> ${escapeHtml(data.transcript || "[no transcript]")}</p>
-                          <p style="margin-top:10px;"><strong>LLM replied:</strong> ${escapeHtml(data.llm_response || "[no reply]")}</p>`;
-        // skill result: if your LLM returned anything that looks like skill text it will be in the llm_response
-        const sr = document.getElementById("skillResult");
-        sr.textContent = data.llm_response || "";
+        const keys = getSavedKeys();
+        const wsProtocol = location.protocol === "https:" ? "wss:" : "ws:";
+        let wsUrl = `${wsProtocol}//${location.host}/ws/stream-audio?session=${SESSION_ID}`;
+        if (keys.assembly) wsUrl += `&assembly_key=${encodeURIComponent(keys.assembly)}`;
+        if (keys.gemini) wsUrl += `&gemini_key=${encodeURIComponent(keys.gemini)}`;
+        if (keys.murf) wsUrl += `&murf_key=${encodeURIComponent(keys.murf)}`;
+        if (keys.news) wsUrl += `&news_key=${encodeURIComponent(keys.news)}`;
 
-        // update sidebar history
-        if (Array.isArray(data.history)) updateChatHistorySidebar(data.history);
+        streamWS = new WebSocket(wsUrl);
 
-        // play audio
-        const audio = document.getElementById("llmAudioPlayer");
-        if (data.audio_url) {
-            audio.src = data.audio_url;
-            try { await audio.play(); } catch(e){ console.warn("autoplay blocked", e) }
-            audio.onended = ()=> setState("idle");
-        } else {
+        streamWS.onopen = async () => {
+            console.log("⚡ WebSocket Streaming connected");
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = async (e) => {
+                if (e.data && e.data.size > 0) {
+                    audioChunks.push(e.data);
+                    if (streamWS && streamWS.readyState === WebSocket.OPEN) {
+                        const buffer = await e.data.arrayBuffer();
+                        streamWS.send(buffer);
+                    }
+                }
+            };
+
+            mediaRecorder.start(250); // send chunks every 250ms
+            setState("recording");
+        };
+
+        streamWS.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                handleWebSocketEvent(data);
+            } catch (err) {
+                console.error("WS Parse error:", err);
+            }
+        };
+
+        streamWS.onerror = (err) => {
+            console.error("WebSocket error:", err);
+            alert("WebSocket connection error.");
             setState("idle");
-        }
+        };
+
+        streamWS.onclose = () => {
+            console.log("WebSocket connection closed.");
+        };
+
     } catch (err) {
-        console.error("sendAudio error", err);
+        console.error("startWebSocketStreaming error:", err);
+        alert("Microphone access denied or WebSocket failed: " + err.message);
+        setState("idle");
+    }
+}
+
+function stopWebSocketStreaming() {
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+    }
+    if (recWaveform && audioChunks.length > 0) {
+        const blob = new Blob(audioChunks, { type: "audio/webm" });
+        recWaveform.load(URL.createObjectURL(blob));
+    }
+    if (streamWS && streamWS.readyState === WebSocket.OPEN) {
+        setState("processing", "Sending stream...");
+        streamWS.send(JSON.stringify({ event: "stop" }));
+    }
+}
+
+function handleWebSocketEvent(data) {
+    if (data.event === "status") {
+        if (data.status === "transcribing") setState("processing", "Transcribing audio...");
+        else if (data.status === "thinking") setState("processing", "Gemini thinking...");
+        else if (data.status === "generating_speech") setState("processing", "Generating TTS audio...");
+    } else if (data.event === "response") {
+        displayResponse(data);
+        if (streamWS) {
+            streamWS.close();
+            streamWS = null;
+        }
+    } else if (data.event === "error") {
+        alert("Streaming Error: " + data.message);
+        setState("idle");
+        if (streamWS) {
+            streamWS.close();
+            streamWS = null;
+        }
+    }
+}
+
+
+// ---------------- 2. HTTP POST Recording Logic ----------------
+async function startHTTPRecording() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = e => {
+            if (e.data && e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(audioChunks, { type: "audio/webm" });
+            if (recWaveform) recWaveform.load(URL.createObjectURL(blob));
+            await sendAudioHTTP(blob);
+        };
+
+        mediaRecorder.start();
+        setState("recording");
+    } catch (err) {
+        console.error("startHTTPRecording error", err);
+        alert("Microphone access denied: " + err.message);
+        setState("idle");
+    }
+}
+
+async function sendAudioHTTP(blob) {
+    setState("processing", "Processing HTTP Upload...");
+    const fd = new FormData();
+    const file = new File([blob], `recording_${Date.now()}.webm`, { type: 'audio/webm' });
+    fd.append("file", file);
+
+    try {
+        const customHeaders = getCustomHeaders();
+        const res = await fetch(`/agent/chat/${SESSION_ID}`, {
+            method: 'POST',
+            headers: customHeaders,
+            body: fd
+        });
+
+        if (!res.ok) {
+            const txt = await res.text().catch(() => null);
+            throw new Error(txt || `Server error ${res.status}`);
+        }
+
+        const data = await res.json();
+        displayResponse(data);
+    } catch (err) {
+        console.error("sendAudioHTTP error:", err);
         alert("Conversation failed: " + (err.message || err));
+        setState("idle");
+    }
+}
+
+
+// ---------------- Common UI Response Renderer ----------------
+function displayResponse(data) {
+    // Transcript box
+    const tbox = document.getElementById("transcript");
+    tbox.innerHTML = `
+        <p><strong>You said:</strong> ${escapeHtml(data.transcript || "[no transcript]")}</p>
+        <p style="margin-top:10px;"><strong>LLM replied:</strong> ${escapeHtml(data.llm_response || "[no reply]")}</p>
+    `;
+
+    // Skill output box
+    const sr = document.getElementById("skillResult");
+    sr.textContent = data.llm_response || "";
+
+    // Sidebar history update
+    if (Array.isArray(data.history)) {
+        updateChatHistorySidebar(data.history);
+    }
+
+    // Audio Playback
+    const audio = document.getElementById("llmAudioPlayer");
+    if (data.audio_url) {
+        audio.src = data.audio_url;
+        setState("playing");
+        audio.play().catch(e => {
+            console.warn("Autoplay blocked:", e);
+            setState("idle");
+        });
+        audio.onended = () => setState("idle");
+    } else {
         setState("idle");
     }
 }
 
 function updateChatHistorySidebar(historyArr) {
     const list = document.getElementById("historyList");
+    if (!list) return;
     list.innerHTML = "";
+
     for (let i = historyArr.length - 2; i >= 0; i -= 2) {
-        const userMsg = historyArr[i] && historyArr[i].role==="user" ? historyArr[i].content : "";
-        const assistantMsg = historyArr[i+1] ? historyArr[i+1].content : "";
+        const userMsg = historyArr[i] && historyArr[i].role === "user" ? historyArr[i].content : "";
+        const assistantMsg = historyArr[i + 1] ? historyArr[i + 1].content : "";
+
         const li = document.createElement("li");
         li.className = "history-item";
-        const snippet = userMsg.length>80 ? userMsg.slice(0,77)+"..." : userMsg;
+        const snippet = userMsg.length > 80 ? userMsg.slice(0, 77) + "..." : userMsg;
         li.innerHTML = `<div class="meta">You</div><div class="snippet">${escapeHtml(snippet)}</div>`;
-        li.addEventListener("click", ()=> {
-            document.getElementById("transcript").innerHTML = `<p><strong>You said:</strong> ${escapeHtml(userMsg)}</p>
-                                                               <p><strong>LLM replied:</strong> ${escapeHtml(assistantMsg)}</p>`;
+        li.addEventListener("click", () => {
+            document.getElementById("transcript").innerHTML = `
+                <p><strong>You said:</strong> ${escapeHtml(userMsg)}</p>
+                <p style="margin-top:10px;"><strong>LLM replied:</strong> ${escapeHtml(assistantMsg)}</p>
+            `;
+            document.getElementById("skillResult").textContent = assistantMsg;
         });
         list.appendChild(li);
     }
+
     if (historyArr.length % 2 === 1) {
-        const last = historyArr[historyArr.length-1];
+        const last = historyArr[historyArr.length - 1];
         if (last) {
             const li = document.createElement("li");
             li.className = "history-item";
@@ -481,12 +342,18 @@ function updateChatHistorySidebar(historyArr) {
             list.insertBefore(li, list.firstChild);
         }
     }
-    list.scrollTop = 0;
 }
 
-// settings modal functions
-function showSettings() { document.getElementById("settingsModal").classList.remove("hidden"); loadKeysToUI(); }
-function hideSettings() { document.getElementById("settingsModal").classList.add("hidden"); }
+// ---------------- Settings Modal Functions ----------------
+function showSettings() {
+    document.getElementById("settingsModal").classList.remove("hidden");
+    loadKeysToUI();
+}
+
+function hideSettings() {
+    document.getElementById("settingsModal").classList.add("hidden");
+}
+
 function saveKeysFromUI() {
     const keys = {
         assembly: document.getElementById("cfg_assembly").value.trim(),
@@ -494,245 +361,61 @@ function saveKeysFromUI() {
         murf: document.getElementById("cfg_murf").value.trim(),
         news: document.getElementById("cfg_news").value.trim()
     };
-    // store locally - backend remains configured by .env for server-run
     localStorage.setItem("voiceAgentKeys", JSON.stringify(keys));
     hideSettings();
+    alert("API keys saved! Custom keys will be sent to the backend.");
 }
+
 function loadKeysToUI() {
-    const k = JSON.parse(localStorage.getItem("voiceAgentKeys") || "{}");
+    const k = getSavedKeys();
     document.getElementById("cfg_assembly").value = k.assembly || "";
     document.getElementById("cfg_gemini").value = k.gemini || "";
     document.getElementById("cfg_murf").value = k.murf || "";
     document.getElementById("cfg_news").value = k.news || "";
 }
 
-document.addEventListener("DOMContentLoaded", ()=>{
+// ---------------- DOM Loaded Entry Point ----------------
+document.addEventListener("DOMContentLoaded", () => {
     initWaveform();
     SESSION_ID = getSessionFromURL();
+    loadSessionHistory();
     setState("idle");
 
     const toggle = document.getElementById("recordToggleBtn");
-    toggle.addEventListener("click", ()=>{
-        if (STATE === "idle") startRecording();
-        else if (STATE === "recording") stopRecording();
-    });
+    if (toggle) {
+        toggle.addEventListener("click", () => {
+            if (STATE === "idle") startRecording();
+            else if (STATE === "recording") stopRecording();
+        });
+    }
 
-    document.getElementById("newChatBtn").addEventListener("click", ()=>{
+    document.getElementById("newChatBtn")?.addEventListener("click", () => {
         SESSION_ID = crypto.randomUUID();
         const params = new URLSearchParams(window.location.search);
         params.set("session", SESSION_ID);
         window.history.replaceState({}, "", `${location.pathname}?${params}`);
         document.getElementById("historyList").innerHTML = "";
         document.getElementById("transcript").innerHTML = `<p class="placeholder">New conversation started...</p>`;
+        document.getElementById("skillResult").textContent = "";
         setState("idle");
     });
 
-    document.getElementById("clearHistoryBtn").addEventListener("click", async ()=>{
-        if (!confirm("Clear session history?")) return;
+    document.getElementById("clearHistoryBtn")?.addEventListener("click", async () => {
+        if (!confirm("Clear session history in database?")) return;
         try {
             await fetch(`/agent/clear/${SESSION_ID}`, { method: "POST" });
             document.getElementById("historyList").innerHTML = "";
             document.getElementById("transcript").innerHTML = `<p class="placeholder">History cleared.</p>`;
-        } catch (e) { console.error(e); alert("Failed to clear") }
+            document.getElementById("skillResult").textContent = "";
+        } catch (e) {
+            console.error(e);
+            alert("Failed to clear history");
+        } finally {
+            setState("idle");
+        }
     });
 
-    document.getElementById("settingsBtn").addEventListener("click", showSettings);
-    document.getElementById("closeModalBtn").addEventListener("click", hideSettings);
-    document.getElementById("saveKeysBtn").addEventListener("click", saveKeysFromUI);
+    document.getElementById("settingsBtn")?.addEventListener("click", showSettings);
+    document.getElementById("closeModalBtn")?.addEventListener("click", hideSettings);
+    document.getElementById("saveKeysBtn")?.addEventListener("click", saveKeysFromUI);
 });
-
-// let recWaveform;
-// let mediaRecorder;
-// let audioChunks = [];
-// let STATE = "idle"; // 'idle' | 'recording' | 'playing'
-// let SESSION_ID = null;
-
-// function initRecWaveform() {
-//   try {
-//     recWaveform = WaveSurfer.create({
-//       container: '#waveformEcho',
-//       waveColor: '#ff00ff',
-//       progressColor: '#ff6600',
-//       height: 80
-//     });
-//   } catch (e) { console.warn("WaveSurfer REC init failed:", e); }
-// }
-
-// function setState(next) {
-//   STATE = next;
-//   const btn = document.getElementById("recordToggleBtn");
-//   const label = document.getElementById("recordBtnLabel");
-//   const status = document.getElementById("statusText");
-//   const dot = status?.querySelector(".status-dot");
-
-//   if (!btn || !label || !status || !dot) return;
-
-//   if (STATE === "idle") {
-//     btn.classList.remove("is-recording");
-//     btn.setAttribute("aria-pressed", "false");
-//     label.textContent = "Start Recording";
-//     status.innerHTML = `<span class="status-dot idle"></span> Idle`;
-//   } else if (STATE === "recording") {
-//     btn.classList.add("is-recording");
-//     btn.setAttribute("aria-pressed", "true");
-//     label.textContent = "Stop & Send";
-//     status.innerHTML = `<span class="status-dot recording"></span> Recording...`;
-//   } else if (STATE === "playing") {
-//     btn.classList.remove("is-recording");
-//     btn.setAttribute("aria-pressed", "false");
-//     label.textContent = "Playing...";
-//     status.innerHTML = `<span class="status-dot playing"></span> Playing reply`;
-//   }
-// }
-
-// async function toggleRecording() {
-//   if (STATE === "idle") {
-//     await startRecording();
-//   } else if (STATE === "recording") {
-//     stopRecording();
-//   }
-// }
-
-// async function startRecording() {
-//   try {
-//     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-//     mediaRecorder = new MediaRecorder(stream);
-//     audioChunks = [];
-
-//     mediaRecorder.ondataavailable = (e) => {
-//       if (e.data && e.data.size > 0) audioChunks.push(e.data);
-//     };
-
-//     mediaRecorder.onstop = async () => {
-//       const blob = new Blob(audioChunks, { type: "audio/webm" });
-//       if (recWaveform) recWaveform.load(URL.createObjectURL(blob));
-//       await sendAudioToChat(blob);
-//     };
-
-//     mediaRecorder.start();
-//     setState("recording");
-//   } catch (err) {
-//     console.error("startRecording error:", err);
-//     alert("Microphone access denied or not available.");
-//     setState("idle");
-//   }
-// }
-
-// function stopRecording() {
-//   try {
-//     if (mediaRecorder && mediaRecorder.state !== "inactive") {
-//       mediaRecorder.stop();
-//     }
-//   } catch (e) { /* no-op */ }
-// }
-
-// // ---- Session ID helper ----
-// function getSessionId() {
-//   const params = new URLSearchParams(window.location.search);
-//   let sessionId = params.get("session");
-//   if (!sessionId) {
-//     sessionId = crypto.randomUUID();
-//     params.set("session", sessionId);
-//     window.history.replaceState({}, "", `${location.pathname}?${params}`);
-//   }
-//   return sessionId;
-// }
-
-// // ---- DOM Ready ----
-// document.addEventListener("DOMContentLoaded", () => {
-//   initRecWaveform();
-//   SESSION_ID = getSessionId();
-
-//   const toggleBtn = document.getElementById("recordToggleBtn");
-//   if (toggleBtn) toggleBtn.addEventListener("click", toggleRecording);
-
-//   const newChatBtn = document.getElementById("newChatBtn");
-//   const clearHistoryBtn = document.getElementById("clearHistoryBtn");
-
-//   if (newChatBtn) {
-//     newChatBtn.addEventListener("click", () => {
-//       SESSION_ID = crypto.randomUUID();
-//       const params = new URLSearchParams(window.location.search);
-//       params.set("session", SESSION_ID);
-//       window.history.replaceState({}, "", `${location.pathname}?${params}`);
-//       document.getElementById("historyList").innerHTML = "";
-//       document.getElementById("transcript").innerHTML =
-//         `<p class="placeholder">New conversation started...</p>`;
-//       setState("idle");
-//     });
-//   }
-
-//   if (clearHistoryBtn) {
-//     clearHistoryBtn.addEventListener("click", async () => {
-//       if (!confirm("Clear history for this session?")) return;
-//       try {
-//         await fetch(`/agent/clear/${SESSION_ID}`, { method: "POST" });
-//         document.getElementById("historyList").innerHTML = "";
-//         document.getElementById("transcript").innerHTML =
-//           `<p class="placeholder">History cleared.</p>`;
-//       } catch (err) {
-//         console.error("Error clearing history:", err);
-//       } finally {
-//         setState("idle");
-//       }
-//     });
-//   }
-
-//   setState("idle");
-// });
-
-// // ---- Send audio via POST (Day 12–14) ----
-// async function sendAudioToChat(audioBlob) {
-//   const fd = new FormData();
-//   const file = new File([audioBlob], `recording_${Date.now()}.webm`, { type: 'audio/webm' });
-//   fd.append("file", file);
-
-//   try {
-//     const res = await fetch(`/agent/chat/${SESSION_ID}`, { method: "POST", body: fd });
-//     const data = await res.json();
-//     console.log("Chat response:", data);
-//   } catch (err) {
-//     console.error("sendAudioToChat error:", err);
-//     alert("Conversation error: " + (err.message || err));
-//     setState("idle");
-//   }
-// }
-
-// // =============================
-// // NEW: Streaming Audio (Day 16)
-// // =============================
-// let ws;
-// let streamMediaRecorder;
-
-// function startStreaming() {
-//   ws = new WebSocket("ws://127.0.0.1:8000/ws/stream-audio");
-
-//   ws.onopen = async () => {
-//     console.log("WebSocket connected. Starting mic stream...");
-//     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-//     streamMediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm;codecs=opus" });
-
-//     streamMediaRecorder.ondataavailable = (event) => {
-//       if (event.data.size > 0 && ws.readyState === WebSocket.OPEN) {
-//         event.data.arrayBuffer().then(buffer => {
-//           ws.send(buffer);  // send binary chunk
-//         });
-//       }
-//     };
-
-//     streamMediaRecorder.start(250); // send every 250ms
-//   };
-
-//   ws.onclose = () => {
-//     console.log("WebSocket closed.");
-//   };
-// }
-
-// function stopStreaming() {
-//   if (streamMediaRecorder && streamMediaRecorder.state !== "inactive") {
-//     streamMediaRecorder.stop();
-//   }
-//   if (ws) {
-//     ws.close();
-//   }
-// }

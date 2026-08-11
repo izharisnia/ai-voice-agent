@@ -29,6 +29,11 @@
             <button id="recordToggleBtn" class="glow-button primary" aria-pressed="false">
               <span id="recordBtnLabel">Start Recording</span>
             </button>
+            <div class="mode-select" style="display: flex; align-items: center; margin: 0 10px;">
+              <label style="font-size: 0.85rem; color: #a0a0ff; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" id="wsModeToggle" checked /> ⚡ Real-Time WS Mode
+              </label>
+            </div>
             <div class="status-pill" id="statusText">
               <span class="status-dot idle"></span> Idle
             </div>
@@ -43,7 +48,7 @@
         <div class="llm-box">
           <div class="llm-header">🔊 LLM Response:</div>
           <div id="skillResult" class="skill-result"></div>
-          <audio id="llmAudioPlayer" controls style="display:block; margin-top:12px;"></audio>
+          <audio id="llmAudioPlayer" controls style="display:block; margin-top:12px; width: 100%;"></audio>
         </div>
       </section>
 
@@ -55,7 +60,7 @@
       </section>
 
       <footer>
-        <p>Built by <strong>Isnia Izhar</strong> | #30DaysOfVoiceAgents</p>
+        <p>Built by <strong>Isnia Izhar</strong> | Electric Voice Agent</p>
       </footer>
     </main>
   </div>
@@ -64,10 +69,11 @@
   <div id="settingsModal" class="modal hidden">
     <div class="modal-content">
       <h3>Configure API Keys</h3>
-      <label>AssemblyAI Key<br><input id="cfg_assembly" type="text" /></label>
-      <label>Gemini Key<br><input id="cfg_gemini" type="text" /></label>
-      <label>Murf Key<br><input id="cfg_murf" type="text" /></label>
-      <label>News API Key (optional)<br><input id="cfg_news" type="text" /></label>
+      <p style="font-size:0.8rem; color:#88a; margin-bottom:12px;">Saved locally in browser. Sent to backend for custom API authentication.</p>
+      <label>AssemblyAI Key<br><input id="cfg_assembly" type="password" placeholder="Defaults to server .env" /></label>
+      <label>Gemini Key<br><input id="cfg_gemini" type="password" placeholder="Defaults to server .env" /></label>
+      <label>Murf Key<br><input id="cfg_murf" type="password" placeholder="Defaults to server .env" /></label>
+      <label>News API Key (optional)<br><input id="cfg_news" type="password" placeholder="Defaults to server .env" /></label>
       <div class="modal-actions">
         <button id="saveKeysBtn" class="glow-button small">Save</button>
         <button id="closeModalBtn" class="glow-button small">Close</button>
