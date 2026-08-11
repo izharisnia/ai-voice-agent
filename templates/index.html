@@ -2,81 +2,726 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>⚡ Electric Voice Agent</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nexus AI | Intelligent Voice Agent Platform</title>
+  <meta name="description" content="Next-generation conversational voice agent platform powered by Google Gemini, Real-Time WebSockets, Native Tool Calling, and SQLite Memory." />
+  
+  <!-- Google Fonts: Playfair Display, Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- WaveSurfer.js -->
   <script src="https://unpkg.com/wavesurfer.js"></script>
+  
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <div class="app-grid">
-    <aside id="chatHistory" class="card sidebar">
-      <div class="history-header">
-        <h3>Conversations</h3>
-        <div class="history-controls">
-          <button id="newChatBtn" class="glow-button small">+ New Chat</button>
-          <button id="clearHistoryBtn" class="glow-button small">Clear</button>
+  <!-- Ambient Background Blobs & Starfield -->
+  <div class="welcome-blobs">
+    <div class="welcome-blob blob-1"></div>
+    <div class="welcome-blob blob-2"></div>
+    <div class="welcome-blob blob-3"></div>
+  </div>
+  
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo">
+        <div class="logo-icon"><i data-lucide="sparkles"></i></div>
+        <div class="logo-text">
+          <span class="brand-title">Nexus AI</span>
+          <span class="brand-tag">Voice Platform</span>
         </div>
       </div>
-      <ul id="historyList" class="history-list"></ul>
-    </aside>
+    </div>
 
-    <main class="container">
-      <section class="card glow-card agent-card">
-        <h2>🤖 Conversational Voice Agent</h2>
+    <!-- Center Floating Capsule Navbar (Matches User Reference Image 100%) -->
+    <nav class="nav-capsule-container">
+      <button class="nav-tab active nav-trigger" data-target="home">
+        <i data-lucide="home"></i> Home
+      </button>
+      <button class="nav-tab nav-trigger" data-target="studio">
+        <i data-lucide="mic"></i> Voice Studio
+      </button>
+      <button class="nav-tab nav-trigger" data-target="guide">
+        <i data-lucide="book-open"></i> Guide
+      </button>
+      <button class="nav-tab nav-trigger" data-target="about">
+        <i data-lucide="info"></i> About Us
+      </button>
+      <button class="nav-tab nav-trigger" data-target="capabilities">
+        <i data-lucide="cpu"></i> Capabilities
+      </button>
+    </nav>
 
-        <div class="controls">
-          <div class="record-row">
-            <button id="recordToggleBtn" class="glow-button primary" aria-pressed="false">
-              <span id="recordBtnLabel">Start Recording</span>
-            </button>
-            <div class="mode-select" style="display: flex; align-items: center; margin: 0 10px;">
-              <label style="font-size: 0.85rem; color: #a0a0ff; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                <input type="checkbox" id="wsModeToggle" checked /> ⚡ Real-Time WS Mode
-              </label>
-            </div>
-            <div class="status-pill" id="statusText">
-              <span class="status-dot idle"></span> Idle
-            </div>
-            <div class="settings">
-              <button id="settingsBtn" class="glow-button small">⚙️ Keys</button>
-            </div>
+    <div class="header-right">
+      <button id="openApiKeysBtn" class="api-keys-pill-btn">
+        <i data-lucide="settings"></i> API Keys
+      </button>
+    </div>
+  </header>
+
+  <!-- Page View 1: Particle-Assembly 3D Glass Cube & Interactive Hero Landing Page -->
+  <div id="tab-home" class="page-tab active-tab">
+    <div class="unbot-hero-container">
+      <!-- Starfield Particle Backdrop & Torus Glow -->
+      <div class="torus-aura-glow"></div>
+      <div class="starfield">
+        <div class="star star-1"></div>
+        <div class="star star-2"></div>
+        <div class="star star-3"></div>
+        <div class="star star-4"></div>
+        <div class="star star-5"></div>
+      </div>
+
+      <!-- Vertical Accent Side Line -->
+      <div class="vertical-accent-line">
+        <span class="line-dot"></span>
+        <span class="vertical-label">EXPLORE</span>
+      </div>
+
+      <div class="unbot-hero-content">
+        <!-- Left Column Title & Control Pill -->
+        <div class="hero-left-col">
+          <h1 class="page-serif-title hero-title-large">
+            Create <span class="highlight-word">natural</span>-sounding AI <br />
+            voices in real-time
+          </h1>
+          
+          <p class="unbot-subheadline">
+            Converse naturally with Google Gemini LLM — fast, realistic, zero-key fallbacks, and native tool execution.
+          </p>
+
+          <!-- Single Connected Pill Segmented Bar -->
+          <div class="unbot-single-pill-group">
+            <button class="pill-segment inactive nav-trigger" data-target="guide">Read Guide</button>
+            <button class="pill-segment active nav-trigger" data-target="studio">Try Demo</button>
+          </div>
+
+          <!-- Release Indicator -->
+          <div class="release-indicator">
+            <span class="pulse-dot"></span>
+            <span>Google Gemini Flash &bull; Real-Time Streaming Active</span>
           </div>
         </div>
 
-        <div id="waveformEcho" class="waveform big"></div>
+        <!-- Right Column: Interactive Particle Assembly 3D Glass Cube Canvas Scene -->
+        <div class="hero-right-col">
+          <div class="cube-scene-wrapper">
+            <!-- Perspective Wireframe Overlay Lines with Glowing Orbs -->
+            <div class="wireframe-grid">
+              <div class="grid-line line-top"></div>
+              <div class="grid-line line-bottom"></div>
+              <div class="wire-orb orb-1"></div>
+              <div class="wire-orb orb-2"></div>
+              <div class="grid-card-wire"></div>
+            </div>
 
-        <div class="llm-box">
-          <div class="llm-header">🔊 LLM Response:</div>
-          <div id="skillResult" class="skill-result"></div>
-          <audio id="llmAudioPlayer" controls style="display:block; margin-top:12px; width: 100%;"></audio>
+            <!-- Particle Assembly 3D Engine Canvas -->
+            <canvas id="particleCubeCanvas" width="520" height="520" class="nav-trigger" data-target="studio" title="Hover to scatter particles • Click to Launch Voice Studio"></canvas>
+
+            <!-- Backup Glass Core Light Aura -->
+            <div class="particle-core-aura"></div>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section class="card glow-card transcription-card">
-        <h2>📝 Transcription</h2>
-        <div id="transcript" class="transcription-box">
-          <p class="placeholder">Your transcription will appear here...</p>
+      <!-- Feature Grid Cards Below: 3D Isometric Floating Cards (Matching Reference Design) -->
+      <div class="unbot-feature-cards home-3d-cards-container">
+        <!-- Card 1: Tilted Left -->
+        <div class="unbot-card home-3d-card card-tilt-left card-float-1">
+          <div class="card-3d-illustration shield-illustration">
+            <div class="illustration-glow"></div>
+            <div class="shield-badge-3d">
+              <i data-lucide="zap" class="shield-icon"></i>
+            </div>
+            <div class="floating-mini-node node-1"></div>
+            <div class="floating-mini-node node-2"></div>
+          </div>
+          <h3>WebSocket Streaming</h3>
+          <p>Full-duplex audio chunk streaming for ultra-low latency conversational responses with instant audio playback.</p>
         </div>
-      </section>
 
-      <footer>
-        <p>Built by <strong>Isnia Izhar</strong> | Electric Voice Agent</p>
-      </footer>
-    </main>
+        <!-- Card 2: Elevated Highlight Center -->
+        <div class="unbot-card home-3d-card card-highlight-center card-float-2">
+          <div class="card-3d-illustration cubes-illustration">
+            <div class="illustration-glow glow-cyan"></div>
+            <div class="iso-cube cube-main"><i data-lucide="cpu"></i></div>
+            <div class="iso-cube cube-sub1"><i data-lucide="sun"></i></div>
+            <div class="iso-cube cube-sub2"><i data-lucide="newspaper"></i></div>
+          </div>
+          <h3>Native Gemini Tools</h3>
+          <p>Autonomously executes live Weather forecasts (`wttr.in`) and Google News RSS feed queries via function calling.</p>
+        </div>
+
+        <!-- Card 3: Tilted Right -->
+        <div class="unbot-card home-3d-card card-tilt-right card-float-3">
+          <div class="card-3d-illustration orbit-illustration">
+            <div class="illustration-glow"></div>
+            <div class="orbit-ring">
+              <div class="orbit-center"><i data-lucide="database"></i></div>
+              <div class="orbit-planet planet-1"></div>
+              <div class="orbit-planet planet-2"></div>
+            </div>
+          </div>
+          <h3>SQLite DB Memory</h3>
+          <p>Persistent turn-by-turn conversation history stored securely across server reloads in local database.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Settings modal (API keys) -->
-  <div id="settingsModal" class="modal hidden">
-    <div class="modal-content">
-      <h3>Configure API Keys</h3>
-      <p style="font-size:0.8rem; color:#88a; margin-bottom:12px;">Saved locally in browser. Sent to backend for custom API authentication.</p>
-      <label>AssemblyAI Key<br><input id="cfg_assembly" type="password" placeholder="Defaults to server .env" /></label>
-      <label>Gemini Key<br><input id="cfg_gemini" type="password" placeholder="Defaults to server .env" /></label>
-      <label>Murf Key<br><input id="cfg_murf" type="password" placeholder="Defaults to server .env" /></label>
-      <label>News API Key (optional)<br><input id="cfg_news" type="password" placeholder="Defaults to server .env" /></label>
-      <div class="modal-actions">
-        <button id="saveKeysBtn" class="glow-button small">Save</button>
-        <button id="closeModalBtn" class="glow-button small">Close</button>
+  <!-- Page View 2: Voice Studio Workspace with Ambient Landing Styling & 3D Particle Orb -->
+  <div id="tab-studio" class="page-tab">
+    <!-- Ambient Torus Glow & Starfield Backdrop -->
+    <div class="torus-aura-glow"></div>
+    <div class="starfield">
+      <div class="star star-1"></div>
+      <div class="star star-2"></div>
+      <div class="star star-3"></div>
+      <div class="star star-4"></div>
+      <div class="star star-5"></div>
+    </div>
+
+    <div class="app-layout">
+      <!-- Sidebar Navigation / History -->
+      <aside id="chatHistory" class="glass-panel sidebar transparent-glass-card">
+        <div class="sidebar-header">
+          <div class="sidebar-title">
+            <i data-lucide="message-square"></i>
+            <h3>Saved Threads</h3>
+          </div>
+          <div class="sidebar-actions">
+            <button id="newChatBtn" class="icon-btn primary-btn" title="New Chat Session">
+              <i data-lucide="plus"></i>
+              <span>New</span>
+            </button>
+            <button id="clearHistoryBtn" class="icon-btn danger-btn" title="Clear All Saved Sessions">
+              <i data-lucide="trash-2"></i>
+            </button>
+          </div>
+        </div>
+        
+        <ul id="historyList" class="history-list"></ul>
+      </aside>
+
+      <!-- Main Studio Content Area -->
+      <main class="main-content">
+        <!-- Voice Agent Interface Card -->
+        <section class="glass-panel main-card transparent-glass-card">
+          <div class="card-header">
+            <div class="header-title">
+              <h1 class="page-serif-title studio-title">
+                Conversational <span class="highlight-word">voice</span> studio
+              </h1>
+              <p class="subtitle">Next-generation agent with real-time audio streaming</p>
+            </div>
+            <span class="model-badge"><i data-lucide="sparkles"></i> Gemini Flash</span>
+          </div>
+
+          <!-- Central Animated Voice Orb with 3D Sphere Particle Canvas -->
+          <div class="orb-section">
+            <div class="voice-orb-wrapper">
+              <!-- 3D Circle Particle Canvas Engine -->
+              <canvas id="particleOrbCanvas" width="380" height="380"></canvas>
+
+              <div class="voice-orb" id="voiceOrb">
+                <div class="orb-wave wave-1"></div>
+                <div class="orb-wave wave-2"></div>
+                <div class="orb-wave wave-3"></div>
+                <div class="orb-core">
+                  <i data-lucide="sparkles" class="orb-sparkle"></i>
+                </div>
+              </div>
+            </div>
+            <p class="orb-status-text" id="orbStatusText">Tap recording button to start speaking...</p>
+          </div>
+
+          <!-- Controls Bar & Recording Button -->
+          <div class="controls-bar transparent-glass-bar">
+            <div class="controls-meta-left">
+              <div class="mode-toggle-wrapper">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="wsModeToggle" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label">
+                  <i data-lucide="zap" class="zap-icon"></i>
+                  Real-Time Stream
+                </span>
+              </div>
+            </div>
+
+            <button id="recordToggleBtn" class="circle-record-btn" aria-pressed="false" title="Start Recording">
+              <div class="record-btn-glow"></div>
+              <div class="record-btn-core">
+                <i data-lucide="mic" id="recordIcon"></i>
+              </div>
+            </button>
+            
+            <div class="controls-meta-right">
+              <div class="status-badge" id="statusText">
+                <span class="status-dot idle"></span>
+                <span class="status-label" id="recordBtnLabel">Idle</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Waveform Container -->
+          <div class="waveform-wrapper transparent-glass-box">
+            <div id="waveformEcho" class="waveform-container"></div>
+          </div>
+
+          <!-- Quick Prompts Section -->
+          <div class="prompt-chips-wrapper">
+            <div class="chips-label">
+              <i data-lucide="sparkles"></i> Quick Prompts
+            </div>
+            <div class="prompt-chips">
+              <button class="chip-btn" data-prompt="What is the weather in Paris?">
+                <span class="chip-icon"><i data-lucide="sun"></i></span>
+                <span class="chip-text">Weather in Paris</span>
+              </button>
+              <button class="chip-btn" data-prompt="What are top breaking news headlines?">
+                <span class="chip-icon"><i data-lucide="newspaper"></i></span>
+                <span class="chip-text">Top Breaking News</span>
+              </button>
+              <button class="chip-btn" data-prompt="Tell me a funny programming joke">
+                <span class="chip-icon"><i data-lucide="smile"></i></span>
+                <span class="chip-text">Programming Joke</span>
+              </button>
+              <button class="chip-btn" data-prompt="What tools and skills do you support?">
+                <span class="chip-icon"><i data-lucide="cpu"></i></span>
+                <span class="chip-text">Assistant Capabilities</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Response Container -->
+          <div class="response-container transparent-glass-box">
+            <div class="response-header">
+              <div class="response-title">
+                <i data-lucide="volume-2"></i>
+                <span>Voice Response</span>
+              </div>
+            </div>
+            
+            <div id="skillResult" class="response-body placeholder-text">
+              Press recording button and speak to receive an instant response...
+            </div>
+            
+            <div class="audio-player-wrapper">
+              <audio id="llmAudioPlayer" controls></audio>
+            </div>
+          </div>
+        </section>
+
+        <!-- Transcription Card -->
+        <section class="glass-panel transcription-card transparent-glass-card">
+          <div class="section-header">
+            <i data-lucide="file-text"></i>
+            <h3>Live Transcription & Flow</h3>
+          </div>
+          <div id="transcript" class="transcription-box transparent-glass-box">
+            <div class="empty-state">
+              <i data-lucide="mic-off"></i>
+              <p>No audio transcribed yet. Click recording above to begin.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Page View 3: Guide Page with Home Landing Split Layout & Interactive 3D Particle Scene -->
+  <div id="tab-guide" class="page-tab">
+    <div class="unbot-hero-container">
+      <!-- Starfield Particle Effect -->
+      <div class="starfield">
+        <div class="star star-1"></div>
+        <div class="star star-2"></div>
+        <div class="star star-3"></div>
+        <div class="star star-4"></div>
+        <div class="star star-5"></div>
+      </div>
+
+      <!-- Vertical Accent Line (Left Margin) -->
+      <div class="vertical-accent-line">
+        <div class="line-dot"></div>
+        <span class="vertical-label">GUIDE</span>
+      </div>
+
+      <!-- Main Hero Grid Layout (Matches Landing Page Structure) -->
+      <div class="unbot-hero-content">
+        <!-- Left Column: Guide Headline & Action Group -->
+        <div class="hero-left-col">
+          <h1 class="page-serif-title hero-title-large">
+            Master <span class="highlight-word">user</span> guide & workflow
+          </h1>
+
+          <p class="unbot-subheadline">
+            Comprehensive step-by-step interactive manual to configure API keys, stream real-time audio over WebSockets, execute native Gemini skills, and manage conversation threads.
+          </p>
+
+          <!-- Single Connected Pill Segmented Group -->
+          <div class="unbot-single-pill-group">
+            <button class="pill-segment active" data-target="studio">1. Setup & Keys</button>
+            <button class="pill-segment nav-trigger" data-target="studio">2. Voice Studio</button>
+            <button class="pill-segment nav-trigger" data-target="capabilities">3. Skills & DB</button>
+          </div>
+
+          <!-- Release Indicator -->
+          <div class="release-indicator">
+            <span class="pulse-dot"></span>
+            <span>Google Gemini Flash &bull; Real-Time Voice Streaming Manual</span>
+          </div>
+        </div>
+
+        <!-- Right Column: Relevant System Architecture Data Card (No Animation) -->
+        <div class="hero-right-col">
+          <div class="glass-panel guide-architecture-card transparent-glass-card">
+            <div class="arch-card-header">
+              <div class="arch-title">
+                <i data-lucide="cpu"></i>
+                <span>Platform System Specs</span>
+              </div>
+              <span class="arch-badge-live"><span class="pulse-dot"></span> Active</span>
+            </div>
+
+            <!-- Specs Matrix Grid -->
+            <div class="arch-specs-grid">
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Multimodal Model</span>
+                <span class="spec-value">Gemini 1.5 Flash</span>
+              </div>
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Audio Transport</span>
+                <span class="spec-value">WebSockets Duplex</span>
+              </div>
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Target Latency</span>
+                <span class="spec-value">&lt; 380ms Response</span>
+              </div>
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Database Storage</span>
+                <span class="spec-value">SQLite DB Memory</span>
+              </div>
+            </div>
+
+            <!-- Built-in Tools Data Summary -->
+            <div class="arch-skills-list">
+              <div class="skills-list-title">
+                <i data-lucide="layers"></i>
+                <span>Native Autonomous Tool Integrations</span>
+              </div>
+              <ul class="skills-bullet-list">
+                <li><i data-lucide="sun"></i> <strong>Live Weather Skill:</strong> Fetches real-time weather via `wttr.in`</li>
+                <li><i data-lucide="newspaper"></i> <strong>Google News Skill:</strong> Searches top RSS breaking news headlines</li>
+                <li><i data-lucide="mic"></i> <strong>Speech-to-Text:</strong> Free zero-dependency browser recognition</li>
+                <li><i data-lucide="volume-2"></i> <strong>Audio Synthesizer:</strong> Natural gTTS voice audio playback</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proper Detailed Guide Cards Grid Below (Steps 1 to 5) -->
+      <div class="guide-cards-grid">
+        <!-- Step 1 Card -->
+        <div class="unbot-card floating-pinned-card card-float-1 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 01</div>
+          <div class="card-icon-box"><i data-lucide="key"></i></div>
+          <h3>API Key Setup & Configuration</h3>
+          <p>Click <strong>API Keys</strong> in top header navigation. Input your Gemini API key (Free key available at <a href="https://aistudio.google.com/" target="_blank" style="color: var(--accent-magenta); text-decoration: underline;">Google AI Studio</a>).</p>
+          <div class="card-tip-tag"><i data-lucide="check-circle-2"></i> STT, TTS, Weather & News run 100% free without paid keys.</div>
+        </div>
+
+        <!-- Step 2 Card -->
+        <div class="unbot-card floating-pinned-card card-float-2 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 02</div>
+          <div class="card-icon-box"><i data-lucide="zap"></i></div>
+          <h3>Select Audio Streaming Mode</h3>
+          <p>In Voice Studio, locate the <strong>Real-Time Stream</strong> toggle:</p>
+          <ul class="card-bullet-list">
+            <li><strong>ON (Recommended):</strong> Streams audio chunks in real-time over WebSockets for minimal latency.</li>
+            <li><strong>OFF:</strong> Standard HTTP mode where recorded audio is sent upon recording finish.</li>
+          </ul>
+        </div>
+
+        <!-- Step 3 Card -->
+        <div class="unbot-card floating-pinned-card card-float-3 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 03</div>
+          <div class="card-icon-box"><i data-lucide="mic"></i></div>
+          <h3>Record Your Voice Prompt</h3>
+          <p>Tap the central <strong>Glowing Mic Button</strong> or Voice Orb to start listening.</p>
+          <ul class="card-bullet-list">
+            <li>Orb pulses in bright magenta/pink while capturing audio.</li>
+            <li>Speak clearly (e.g. <em>"What is the weather in London?"</em>).</li>
+            <li>Tap mic button again to finalize turn.</li>
+          </ul>
+        </div>
+
+        <!-- Step 4 Card -->
+        <div class="unbot-card floating-pinned-card card-float-1 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 04</div>
+          <div class="card-icon-box"><i data-lucide="cpu"></i></div>
+          <h3>Native Gemini Tool Execution</h3>
+          <p>Gemini LLM uses <strong>Native Function Calling</strong> to execute live tools autonomously:</p>
+          <ul class="card-bullet-list">
+            <li>Ask <em>"Weather in Paris"</em> to run live weather API.</li>
+            <li>Ask <em>"Top breaking news"</em> to query Google News RSS.</li>
+          </ul>
+        </div>
+
+        <!-- Step 5 Card -->
+        <div class="unbot-card floating-pinned-card card-float-2 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 05</div>
+          <div class="card-icon-box"><i data-lucide="database"></i></div>
+          <h3>SQLite Thread Persistence</h3>
+          <p>All turns are saved in local SQLite DB (`voice_agent.db`). Click <strong>+ New Chat</strong> in sidebar to start a new thread or load history.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page View 4: About Us Page (Matches Guide Page Structure & Murf API Challenge) -->
+  <div id="tab-about" class="page-tab">
+    <div class="unbot-hero-container">
+      <!-- Starfield Particle Effect -->
+      <div class="starfield">
+        <div class="star star-1"></div>
+        <div class="star star-2"></div>
+        <div class="star star-3"></div>
+        <div class="star star-4"></div>
+        <div class="star star-5"></div>
+      </div>
+
+      <!-- Vertical Accent Line (Left Margin) -->
+      <div class="vertical-accent-line">
+        <div class="line-dot"></div>
+        <span class="vertical-label">ABOUT</span>
+      </div>
+
+      <!-- Main Hero Grid Layout (Matches Guide & Landing Structure) -->
+      <div class="unbot-hero-content">
+        <!-- Left Column: About Headline & Developer Bio -->
+        <div class="hero-left-col">
+          <h1 class="page-serif-title hero-title-large">
+            About <span class="highlight-word">Nexus</span> AI platform
+          </h1>
+
+          <p class="unbot-subheadline">
+            Designed & developed by <strong>Isnia Izhar</strong> for the official <strong>Murf's 30 Days Of AI Agents</strong> challenge (hosted by <strong>Murf API</strong>). Built to deliver low-latency real-time voice streaming with native Gemini multimodal tool execution.
+          </p>
+
+          <!-- Single Connected Pill Segmented Group -->
+          <div class="unbot-single-pill-group">
+            <button class="pill-segment active" data-target="about">1. Murf Challenge</button>
+            <button class="pill-segment nav-trigger" data-target="studio">2. Voice Studio</button>
+            <button class="pill-segment nav-trigger" data-target="guide">3. User Guide</button>
+          </div>
+
+          <!-- Release Indicator -->
+          <div class="release-indicator">
+            <span class="pulse-dot"></span>
+            <span>Built for Murf's 30 Days Of AI Agents &bull; August '25</span>
+          </div>
+        </div>
+
+        <!-- Right Column: Murf Challenge Certificate Showcase Data Card -->
+        <div class="hero-right-col">
+          <div class="glass-panel guide-architecture-card transparent-glass-card">
+            <div class="arch-card-header">
+              <div class="arch-title">
+                <i data-lucide="award"></i>
+                <span>Murf's 30 Days Of AI Agents</span>
+              </div>
+              <span class="arch-badge-live"><span class="pulse-dot"></span> Certified</span>
+            </div>
+
+            <!-- Challenge Details Grid -->
+            <div class="arch-specs-grid">
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Developer</span>
+                <span class="spec-value">Isnia Izhar</span>
+              </div>
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Event / Initiative</span>
+                <span class="spec-value">30 Days Of AI Agents</span>
+              </div>
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Platform Host</span>
+                <span class="spec-value">Murf API</span>
+              </div>
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Timeline</span>
+                <span class="spec-value">August '25</span>
+              </div>
+            </div>
+
+            <!-- Recognition Summary -->
+            <div class="arch-skills-list">
+              <div class="skills-list-title">
+                <i data-lucide="check-circle-2"></i>
+                <span>Challenge Key Accomplishments</span>
+              </div>
+              <ul class="skills-bullet-list">
+                <li><i data-lucide="zap"></i> <strong>Real-Time Audio Streaming:</strong> WebSockets full-duplex transport</li>
+                <li><i data-lucide="cpu"></i> <strong>Autonomous Function Calling:</strong> Live Weather (`wttr.in`) & News tools</li>
+                <li><i data-lucide="database"></i> <strong>Persistent Memory:</strong> SQLite turn-by-turn chat history storage</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pinned Floating Feature Cards Below (About Details) -->
+      <div class="guide-cards-grid">
+        <!-- Card 1: Murf Challenge Context -->
+        <div class="unbot-card floating-pinned-card card-float-1 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Murf API</div>
+          <div class="card-icon-box"><i data-lucide="award"></i></div>
+          <h3>Murf's 30 Days Of AI Agents</h3>
+          <p>Built by <strong>Isnia Izhar</strong> for the official <em>30 Days Of AI Agents</em> challenge held in August '25 by <strong>Murf API</strong> (Co-Founder & CEO Ankur Edkie).</p>
+        </div>
+
+        <!-- Card 2: Voice Streaming Architecture -->
+        <div class="unbot-card floating-pinned-card card-float-2 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Architecture</div>
+          <div class="card-icon-box"><i data-lucide="zap"></i></div>
+          <h3>Full-Duplex WebSockets Streaming</h3>
+          <p>Engineered with dual WebSockets transport to capture microphone chunks in real-time and stream synthesised voice playback with minimal latency.</p>
+        </div>
+
+        <!-- Card 3: Multimodal Function Calling -->
+        <div class="unbot-card floating-pinned-card card-float-3 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Gemini LLM</div>
+          <div class="card-icon-box"><i data-lucide="sparkles"></i></div>
+          <h3>Native Gemini Tool Execution</h3>
+          <p>Powered by Google Gemini 1.5 Flash multimodal intelligence with native function calling to autonomously query live weather and breaking news feeds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page View 5: System Capabilities Page -->
+  <div id="tab-capabilities" class="page-tab">
+    <div class="content-container">
+      <section class="glass-panel page-card">
+        <div class="page-header">
+          <div class="header-icon-box">
+            <i data-lucide="cpu"></i>
+          </div>
+          <div>
+            <h1 class="page-serif-title inner-page-title">
+              System <span class="highlight-word">capabilities</span> & features
+            </h1>
+            <p class="subtitle">Core engineering deliverables, tool integrations, and architecture specs</p>
+          </div>
+        </div>
+
+        <div class="objectives-list">
+          <div class="objective-item">
+            <div class="obj-number">01</div>
+            <div class="obj-content">
+              <h3>Full-Duplex Binary WebSocket Audio Streaming</h3>
+              <p>Eliminates turn latency by streaming micro-chunk binary WebM audio over WebSockets for natural, real-time speech responses.</p>
+            </div>
+          </div>
+
+          <div class="objective-item">
+            <div class="obj-number">02</div>
+            <div class="obj-content">
+              <h3>Native Function Calling & Real-World Skill Execution</h3>
+              <p>Empowers the AI assistant to autonomously run tools like live Weather forecasting (`wttr.in`) and Google News RSS feed queries.</p>
+            </div>
+          </div>
+
+          <div class="objective-item">
+            <div class="obj-number">03</div>
+            <div class="obj-content">
+              <h3>SQLite Multi-Thread Session Memory</h3>
+              <p>Stores conversation turns in SQLite database (`voice_agent.db`), supporting persistent multi-session thread switching in the sidebar.</p>
+            </div>
+          </div>
+
+          <div class="objective-item">
+            <div class="obj-number">04</div>
+            <div class="obj-content">
+              <h3>Zero-Key Free Tier Fallbacks</h3>
+              <p>Features zero-key fallback engines including Google Free Speech Recognition, `gTTS` audio synthesis, and RSS feeds.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>Built by <strong>Isnia Izhar</strong> &bull; Intelligent Voice Assistant Platform</p>
+  </footer>
+
+  <!-- Settings Modal (API Keys) -->
+  <div id="settingsModal" class="modal-backdrop hidden">
+    <div class="glass-panel modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i data-lucide="key"></i>
+          <h3>Configure API Keys</h3>
+        </div>
+        <button id="closeModalBtn" class="close-btn">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      
+      <p class="modal-desc">Keys are stored securely in browser local storage and prioritize your personal accounts.</p>
+      
+      <div class="modal-form">
+        <div class="form-group">
+          <label for="cfg_assembly">
+            <i data-lucide="mic"></i> AssemblyAI Key <span class="badge-optional">Optional</span>
+          </label>
+          <input id="cfg_assembly" type="password" placeholder="Defaults to server 0-key SpeechRecognition" />
+        </div>
+        
+        <div class="form-group">
+          <label for="cfg_gemini">
+            <i data-lucide="sparkles"></i> Gemini API Key <span class="badge-required">Required</span>
+          </label>
+          <input id="cfg_gemini" type="password" placeholder="AIzaSy..." />
+        </div>
+        
+        <div class="form-group">
+          <label for="cfg_murf">
+            <i data-lucide="volume-2"></i> Murf API Key <span class="badge-optional">Optional</span>
+          </label>
+          <input id="cfg_murf" type="password" placeholder="Defaults to free gTTS voice" />
+        </div>
+        
+        <div class="form-group">
+          <label for="cfg_news">
+            <i data-lucide="newspaper"></i> News API Key <span class="badge-optional">Optional</span>
+          </label>
+          <input id="cfg_news" type="password" placeholder="Defaults to free Google News RSS" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="saveKeysBtn" class="glow-btn primary-btn">
+          <i data-lucide="check"></i> Save Settings
+        </button>
       </div>
     </div>
   </div>

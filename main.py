@@ -18,7 +18,10 @@ from models.schemas import TTSRequest, TTSResponse, ChatResponse, ClearResponse
 from services.stt_service import transcribe_bytes
 from services.llm_service import call_llm_conversation
 from services.tts_service import generate_tts_from_text
-from db import init_db, save_message, get_history, clear_history, list_sessions
+from db import (
+    init_db, save_message, get_history, clear_history,
+    list_sessions_with_preview, clear_all_sessions
+)
 
 load_dotenv()
 
@@ -112,16 +115,6 @@ async def agent_chat(
     x_murf_key: Optional[str] = Header(None),
     x_news_key: Optional[str] = Header(None),
 ):
-    """
-    Main HTTP Voice Pipeline:
-    1. Receive uploaded audio
-    2. Transcribe via AssemblyAI (dynamic client key fallback)
-    3. Save user turn to SQLite DB
-    4. Call Gemini LLM with Native Tools & full DB history
-    5. Save assistant reply to SQLite DB
-    6. Generate TTS via Murf AI
-    7. Return transcript, reply, audio URL, and persistent history
-    """
     try:
         content = await file.read()
         if not content:
@@ -179,6 +172,12 @@ async def agent_chat(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/agent/sessions")
+async def list_all_sessions_route():
+    """List all stored conversation session threads in SQLite DB."""
+    return {"sessions": list_sessions_with_preview()}
+
+
 @app.get("/agent/history/{session_id}")
 async def get_session_history_route(session_id: str):
     """Retrieve persistent history for a session from SQLite DB."""
@@ -187,9 +186,16 @@ async def get_session_history_route(session_id: str):
 
 @app.post("/agent/clear/{session_id}")
 async def clear_session_route(session_id: str):
-    """Clear chat history in SQLite DB for a session."""
+    """Clear chat history in SQLite DB for a specific session."""
     clear_history(session_id)
     return {"cleared": True, "session": session_id}
+
+
+@app.post("/agent/clear-all")
+async def clear_all_sessions_route():
+    """Clear all session histories in SQLite DB."""
+    clear_all_sessions()
+    return {"cleared_all": True}
 
 
 @app.post("/transcribe/file")
@@ -223,18 +229,6 @@ async def websocket_stream_audio(
     murf_key: Optional[str] = Query(None),
     news_key: Optional[str] = Query(None)
 ):
-    """
-    WebSocket Real-Time Audio Streaming Pipeline:
-    - Client connects and streams binary audio chunks (e.g., 250ms chunks).
-    - Server buffers binary audio in memory.
-    - When client sends string message '{"event":"stop"}' or closes stream:
-      - Server transcribes buffered audio
-      - Saves user turn to SQLite DB
-      - Queries Gemini with Native Tools
-      - Saves assistant turn to SQLite DB
-      - Generates TTS audio
-      - Sends JSON response back over WebSocket connection
-    """
     await manager.connect(ws)
     logger.info(f"WebSocket client connected for session {session}")
     audio_buffer = bytearray()
@@ -243,18 +237,15 @@ async def websocket_stream_audio(
         await manager.send_json({"event": "connected", "session": session}, ws)
 
         while True:
-            # Receive either binary audio chunk or JSON control message
             message = await ws.receive()
 
             if "bytes" in message and message["bytes"]:
                 audio_buffer.extend(message["bytes"])
-                # Send minor ACK back to client if needed
                 await manager.send_json({"event": "chunk_received", "bytes_total": len(audio_buffer)}, ws)
 
             elif "text" in message and message["text"]:
                 text_data = message["text"].strip()
                 if text_data == '{"event":"stop"}' or text_data == "stop":
-                    # Process accumulated audio stream
                     if not audio_buffer:
                         await manager.send_json({"event": "error", "message": "No audio buffer received"}, ws)
                         continue
@@ -299,7 +290,6 @@ async def websocket_stream_audio(
                         "history": updated_history
                     }, ws)
 
-                    # Clear buffer for next turn
                     audio_buffer.clear()
 
     except WebSocketDisconnect:

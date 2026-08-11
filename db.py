@@ -1,8 +1,7 @@
 # db.py
 import sqlite3
 import os
-from typing import List, Dict
-from datetime import datetime
+from typing import List, Dict, Any
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "voice_agent.db")
 
@@ -63,10 +62,29 @@ def clear_history(session_id: str):
     conn.commit()
     conn.close()
 
-def list_sessions() -> List[str]:
+def clear_all_sessions():
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT session_id FROM sessions ORDER BY created_at DESC")
+    cursor.execute("DELETE FROM messages")
+    cursor.execute("DELETE FROM sessions")
+    conn.commit()
+    conn.close()
+
+def list_sessions_with_preview() -> List[Dict[str, Any]]:
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT s.session_id, s.created_at,
+               (SELECT content FROM messages m WHERE m.session_id = s.session_id ORDER BY id DESC LIMIT 1) as last_snippet,
+               (SELECT COUNT(*) FROM messages m WHERE m.session_id = s.session_id) as msg_count
+        FROM sessions s
+        ORDER BY s.created_at DESC
+    """)
     rows = cursor.fetchall()
     conn.close()
-    return [row["session_id"] for row in rows]
+    return [{
+        "session_id": row["session_id"],
+        "created_at": row["created_at"],
+        "last_snippet": row["last_snippet"] or "New session",
+        "msg_count": row["msg_count"]
+    } for row in rows]
