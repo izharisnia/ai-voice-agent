@@ -552,8 +552,52 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("settingsBtn")?.addEventListener("click", showSettings);
+    document.getElementById("openApiKeysBtn")?.addEventListener("click", showSettings);
     document.getElementById("closeModalBtn")?.addEventListener("click", hideSettings);
     document.getElementById("saveKeysBtn")?.addEventListener("click", saveKeysFromUI);
+
+    // Mobile Side Drawer Menu System
+    const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+    const mobileDrawer = document.getElementById("mobileDrawer");
+    const mobileDrawerBackdrop = document.getElementById("mobileDrawerBackdrop");
+    const closeMobileDrawerBtn = document.getElementById("closeMobileDrawerBtn");
+
+    function openMobileDrawer() {
+        if (mobileDrawer && mobileDrawerBackdrop) {
+            mobileDrawer.classList.remove("hidden");
+            mobileDrawerBackdrop.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+        }
+    }
+
+    function closeMobileDrawer() {
+        if (mobileDrawer && mobileDrawerBackdrop) {
+            mobileDrawer.classList.add("hidden");
+            mobileDrawerBackdrop.classList.add("hidden");
+            document.body.style.overflow = "";
+        }
+    }
+
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener("click", openMobileDrawer);
+    }
+    if (closeMobileDrawerBtn) {
+        closeMobileDrawerBtn.addEventListener("click", closeMobileDrawer);
+    }
+    if (mobileDrawerBackdrop) {
+        mobileDrawerBackdrop.addEventListener("click", closeMobileDrawer);
+    }
+
+    document.querySelectorAll(".mobile-nav-item").forEach(item => {
+        item.addEventListener("click", () => {
+            closeMobileDrawer();
+        });
+    });
+
+    document.getElementById("openMobileApiKeysBtn")?.addEventListener("click", () => {
+        closeMobileDrawer();
+        showSettings();
+    });
 
     // Initialize 3D Particle Engines
     initParticleCubeEngine();

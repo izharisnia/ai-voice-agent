@@ -2465,10 +2465,159 @@ input:checked + .toggle-slider:before {
   padding: 24px 0 36px 0;
 }
 
-/* Responsive Media Queries */
+/* Utility Hidden Class */
+.hidden {
+  display: none !important;
+}
+
+/* Mobile Hamburger Menu & Slide Drawer Base System */
+.mobile-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(18, 12, 28, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(217, 70, 239, 0.3);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-menu-toggle:hover {
+  border-color: var(--accent-magenta);
+  box-shadow: 0 0 20px rgba(217, 70, 239, 0.4);
+}
+
+.mobile-menu-toggle i {
+  width: 22px;
+  height: 22px;
+}
+
+.mobile-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 3, 8, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 998;
+  opacity: 1;
+  display: block !important;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-drawer-backdrop.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 310px;
+  max-width: 85vw;
+  background: rgba(14, 9, 24, 0.96);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-left: 1px solid rgba(217, 70, 239, 0.25);
+  box-shadow: -10px 0 50px rgba(0, 0, 0, 0.85);
+  z-index: 999;
+  display: flex !important;
+  flex-direction: column;
+  transform: translateX(0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-drawer.hidden {
+  transform: translateX(100%);
+  pointer-events: none;
+}
+
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mobile-drawer-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-nav-item {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 14px 20px;
+  font-size: 1rem;
+  border-radius: 16px;
+}
+
+.mobile-drawer-footer {
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mobile-api-keys-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 14px;
+}
+
+/* =============================================
+   RESPONSIVE: Tablet & Mobile (max-width: 960px)
+   ============================================= */
 @media (max-width: 960px) {
-  .hero-title-large {
-    font-size: 2.2rem;
+
+  /* --- NAVBAR / HEADER --- */
+  .app-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+  }
+
+  .header-left {
+    width: auto;
+  }
+
+  .nav-capsule-container {
+    display: none; /* Replaced by sleek side menu drawer */
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-right #openApiKeysBtn {
+    display: none; /* Moved into mobile hamburger side drawer */
+  }
+
+  .mobile-menu-toggle {
+    display: inline-flex;
+  }
+
+  /* --- HOME PAGE: Hero Container --- */
+  .unbot-hero-container {
+    padding: 16px 16px;
   }
 
   .unbot-hero-content {
@@ -2476,45 +2625,703 @@ input:checked + .toggle-slider:before {
     padding-left: 0;
     text-align: center;
   }
-  
+
+  .hero-title-large {
+    font-size: 2.4rem;
+  }
+
+  .unbot-subheadline {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .vertical-accent-line {
     display: none;
   }
-  
+
   .unbot-single-pill-group {
     margin-left: auto;
     margin-right: auto;
   }
 
+  .release-indicator {
+    justify-content: center;
+  }
+
+  /* --- HOME PAGE: 3D Cube Scene --- */
+  .cube-scene-wrapper {
+    width: 360px;
+    height: 360px;
+    margin: 0 auto;
+  }
+
+  #particleCubeCanvas {
+    width: 360px;
+    height: 360px;
+  }
+
+  .particle-core-aura {
+    width: 240px;
+    height: 240px;
+  }
+
+  .torus-aura-glow {
+    width: 260px;
+    height: 260px;
+  }
+
+  /* --- HOME PAGE: Feature Cards --- */
   .unbot-feature-cards {
     grid-template-columns: 1fr;
     padding-left: 0;
+    padding-right: 0;
   }
 
+  .home-3d-cards-container {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 20px;
+  }
+
+  .card-tilt-left,
+  .card-tilt-right {
+    transform: none;
+  }
+
+  /* --- VOICE STUDIO PAGE --- */
   .app-layout {
     grid-template-columns: 1fr;
     padding: 16px;
+    min-height: auto;
+    gap: 16px;
   }
-  
+
   .sidebar {
     height: auto;
     position: relative;
     top: 0;
+    max-height: 260px;
   }
-  
-  .info-grid, .skills-mini-grid {
+
+  .main-card {
+    padding: 20px;
+  }
+
+  .voice-orb-wrapper {
+    width: 280px;
+    height: 280px;
+  }
+
+  #particleOrbCanvas {
+    width: 280px;
+    height: 280px;
+  }
+
+  .controls-bar {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+  }
+
+  .controls-meta-left,
+  .controls-meta-right {
+    flex: none;
+    width: auto;
+  }
+
+  .prompt-chips {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip-btn {
+    font-size: 0.82rem;
+    padding: 6px 12px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  /* --- GUIDE PAGE --- */
+  .guide-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding-left: 0;
+    padding-right: 0;
+    gap: 16px;
+  }
+
+  .guide-architecture-card {
+    width: 100%;
+  }
+
+  .arch-specs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .guide-steps-wrapper {
+    padding-left: 10px;
+  }
+
+  .step-card {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* --- ABOUT US PAGE --- */
+  .info-grid {
     grid-template-columns: 1fr;
   }
-  
-  .step-card {
+
+  .skills-mini-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .developer-box {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .page-card {
+    padding: 24px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .content-container {
+    padding: 0 16px;
+  }
+
+  /* --- USER KIT PAGE --- */
+  .userkit-section-header {
+    padding: 40px 16px 16px;
+  }
+
+  .userkit-section-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .userkit-flowchart-wrapper {
+    max-width: 100%;
+    margin: 16px auto 30px;
+    border-radius: 16px;
+  }
+
+  .userkit-flowchart-img {
+    border-radius: 14px;
+  }
+
+  /* --- MODAL --- */
+  .modal-card {
+    max-width: 92vw;
+    padding: 24px;
+  }
+
+  /* --- CAPABILITIES LIST --- */
+  .objective-item {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* =============================================
+   RESPONSIVE: Phone (max-width: 600px)
+   ============================================= */
+@media (max-width: 600px) {
+
+  /* --- NAVBAR / HEADER --- */
+  .app-header {
+    padding: 12px 12px;
+    gap: 10px;
+  }
+
+  .nav-capsule-container {
+    width: 100%;
+    border-radius: 16px;
+    gap: 2px;
+    padding: 6px;
+  }
+
+  .nav-tab {
+    padding: 7px 10px;
+    font-size: 0.76rem;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .nav-tab i {
+    width: 14px;
+    height: 14px;
+  }
+
+  .brand-title {
+    font-size: 1rem;
+  }
+
+  .brand-tag {
+    display: none;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+
+  /* --- HERO / LANDING --- */
+  .unbot-hero-container {
+    padding: 10px 10px;
+  }
+
+  .hero-title-large {
+    font-size: 1.8rem;
+    margin-bottom: 14px;
+  }
+
+  .studio-title {
+    font-size: 1.35rem;
+  }
+
+  .inner-page-title {
+    font-size: 1.5rem;
+  }
+
+  .unbot-subheadline {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  .highlight-word {
+    padding: 2px 10px;
+    font-size: inherit;
+  }
+
+  /* --- PILL GROUP --- */
+  .unbot-single-pill-group {
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    width: 100%;
+  }
+
+  .pill-segment {
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* --- 3D CUBE --- */
+  .cube-scene-wrapper {
+    width: 260px;
+    height: 260px;
+  }
+
+  #particleCubeCanvas {
+    width: 260px;
+    height: 260px;
+  }
+
+  .particle-core-aura {
+    width: 180px;
+    height: 180px;
+  }
+
+  .torus-aura-glow {
+    width: 200px;
+    height: 200px;
+  }
+
+  .grid-card-wire {
+    display: none;
+  }
+
+  /* --- HOME 3D CARDS --- */
+  .home-3d-cards-container {
+    padding: 10px;
+    gap: 14px;
+  }
+
+  .home-3d-card {
+    padding: 22px 18px;
+    border-radius: 20px;
+  }
+
+  .card-3d-illustration {
+    height: 90px;
+    margin-bottom: 16px;
+  }
+
+  /* --- FEATURE CARDS --- */
+  .unbot-feature-cards {
+    gap: 14px;
+    padding: 0 4px;
+  }
+
+  /* --- GUIDE CARDS GRID --- */
+  .guide-cards-grid {
+    grid-template-columns: 1fr;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 14px;
+  }
+
+  .floating-pinned-card {
+    padding: 20px;
+  }
+
+  .card-icon-box {
+    width: 38px;
+    height: 38px;
+    margin-bottom: 12px;
+  }
+
+  .unbot-card h3 {
+    font-size: 1.05rem;
+  }
+
+  .unbot-card p {
+    font-size: 0.85rem;
+  }
+
+  .card-bullet-list {
+    font-size: 0.82rem;
+    padding-left: 14px;
+  }
+
+  .card-tip-tag {
+    font-size: 0.78rem;
+    padding: 8px 10px;
+  }
+
+  .step-num-pill {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+  }
+
+  /* --- GUIDE ARCHITECTURE CARD --- */
+  .guide-architecture-card {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .arch-specs-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .arch-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .skills-bullet-list li {
+    font-size: 0.8rem;
+  }
+
+  /* --- VOICE STUDIO --- */
+  .app-layout {
+    padding: 10px;
+    gap: 12px;
+  }
+
+  .sidebar {
+    max-height: 200px;
+    padding: 16px;
+  }
+
+  .sidebar-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .sidebar-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .sidebar-actions .icon-btn {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.78rem;
+    padding: 7px 8px;
+  }
+
+  .main-card {
+    padding: 16px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .voice-orb-wrapper {
+    width: 220px;
+    height: 220px;
+  }
+
+  #particleOrbCanvas {
+    width: 220px;
+    height: 220px;
+  }
+
+  .orb-section {
+    padding: 8px 0;
+    margin-bottom: 14px;
+  }
+
+  .voice-orb {
+    width: 100px;
+    height: 100px;
+  }
+
+  .orb-core {
+    width: 44px;
+    height: 44px;
+  }
+
+  .controls-bar {
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .controls-meta-left,
+  .controls-meta-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .circle-record-btn {
+    width: 54px;
+    height: 54px;
+  }
+
+  .record-btn-core {
+    width: 44px;
+    height: 44px;
+  }
+
+  .mode-toggle-wrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .toggle-label {
+    font-size: 0.78rem;
+  }
+
+  .status-badge {
+    font-size: 0.78rem;
+    padding: 5px 10px;
+  }
+
+  .waveform-wrapper {
+    padding: 10px;
+  }
+
+  .prompt-chips {
+    gap: 6px;
+  }
+
+  .chip-btn {
+    font-size: 0.78rem;
+    padding: 5px 10px;
+  }
+
+  .chips-label {
+    font-size: 0.72rem;
+    margin-bottom: 8px;
+  }
+
+  .response-container {
+    padding: 16px;
+  }
+
+  .response-body {
+    font-size: 0.92rem;
+  }
+
+  .transcription-card {
+    padding: 16px;
+  }
+
+  .chat-bubble {
+    padding: 12px 14px;
+    max-width: 98%;
+  }
+
+  .glow-btn {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  /* --- ABOUT PAGE --- */
+  .page-card {
+    padding: 18px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .header-icon-box {
+    width: 46px;
+    height: 46px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .info-card {
+    padding: 18px;
+  }
+
+  .developer-box {
+    flex-direction: column;
+    text-align: center;
+    padding: 18px;
+    gap: 12px;
+  }
+
+  .dev-name {
+    font-size: 1.1rem;
+  }
+
+  .skills-mini-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .skill-mini-card {
+    padding: 12px;
+  }
+
+  .content-container {
+    padding: 0 8px;
+  }
+
+  /* --- OBJECTIVES / CAPABILITIES LIST --- */
+  .objective-item {
+    padding: 16px;
+    gap: 10px;
     flex-direction: column;
   }
 
-  .top-navbar {
-    margin: 10px 12px 0 12px;
+  .obj-number {
+    font-size: 1.4rem;
   }
-  
-  .nav-links span {
-    display: none;
+
+  .obj-content h3 {
+    font-size: 1.02rem;
+  }
+
+  .obj-content p {
+    font-size: 0.85rem;
+  }
+
+  /* --- USER KIT --- */
+  .userkit-section-header {
+    padding: 30px 12px 12px;
+  }
+
+  .userkit-section-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .userkit-section-header p {
+    font-size: 0.85rem;
+  }
+
+  .userkit-flowchart-wrapper {
+    margin: 12px auto 24px;
+    border-radius: 14px;
+    padding: 3px;
+  }
+
+  .userkit-flowchart-img {
+    border-radius: 12px;
+  }
+
+  /* --- MODAL --- */
+  .modal-card {
+    max-width: 96vw;
+    padding: 18px;
+    border-radius: var(--radius-md);
+  }
+
+  .modal-title h3 {
+    font-size: 1.05rem;
+  }
+
+  .modal-desc {
+    font-size: 0.82rem;
+  }
+
+  .form-group input {
+    padding: 9px 12px;
+    font-size: 0.85rem;
+  }
+
+  /* --- FOOTER --- */
+  .app-footer {
+    font-size: 0.78rem;
+    padding: 16px 0 24px 0;
+  }
+
+  /* --- GUIDE STEPS WRAPPER --- */
+  .guide-steps-wrapper {
+    padding-left: 0;
+  }
+
+  .guide-timeline-line {
+    left: 12px;
+  }
+
+  .step-card {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .step-header h3 {
+    font-size: 1rem;
+  }
+
+  .step-content p {
+    font-size: 0.88rem;
+  }
+
+  .callout-box {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    padding: 10px;
+    font-size: 0.82rem;
   }
 }
+

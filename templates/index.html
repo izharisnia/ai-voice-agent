@@ -62,8 +62,52 @@
       <button id="openApiKeysBtn" class="api-keys-pill-btn">
         <i data-lucide="settings"></i> API Keys
       </button>
+      <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Toggle Mobile Navigation">
+        <i data-lucide="menu"></i>
+      </button>
     </div>
   </header>
+
+  <!-- Mobile Side Drawer Navigation Menu & Overlay -->
+  <div id="mobileDrawerBackdrop" class="mobile-drawer-backdrop hidden"></div>
+  <div id="mobileDrawer" class="mobile-drawer hidden">
+    <div class="mobile-drawer-header">
+      <div class="logo">
+        <div class="logo-icon"><i data-lucide="sparkles"></i></div>
+        <div class="logo-text">
+          <span class="brand-title">Nexus AI</span>
+          <span class="brand-tag">Voice Platform</span>
+        </div>
+      </div>
+      <button id="closeMobileDrawerBtn" class="close-btn" aria-label="Close Menu">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="mobile-drawer-body">
+      <nav class="mobile-nav-links">
+        <button class="mobile-nav-item nav-tab active nav-trigger" data-target="home" data-tab="home">
+          <i data-lucide="home"></i> Home
+        </button>
+        <button class="mobile-nav-item nav-tab nav-trigger" data-target="studio" data-tab="studio">
+          <i data-lucide="mic"></i> Voice Studio
+        </button>
+        <button class="mobile-nav-item nav-tab nav-trigger" data-target="guide" data-tab="guide">
+          <i data-lucide="book-open"></i> Guide
+        </button>
+        <button class="mobile-nav-item nav-tab nav-trigger" data-target="about" data-tab="about">
+          <i data-lucide="info"></i> About Us
+        </button>
+        <button class="mobile-nav-item nav-tab nav-trigger" data-target="capabilities" data-tab="capabilities">
+          <i data-lucide="package"></i> User Kit
+        </button>
+      </nav>
+      <div class="mobile-drawer-footer">
+        <button id="openMobileApiKeysBtn" class="api-keys-pill-btn mobile-api-keys-btn">
+          <i data-lucide="settings"></i> API Keys Settings
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Page View 1: Particle-Assembly 3D Glass Cube & Interactive Hero Landing Page -->
   <div id="tab-home" class="page-tab active-tab">
