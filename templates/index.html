@@ -54,7 +54,7 @@
         <i data-lucide="info"></i> About Us
       </button>
       <button class="nav-tab nav-trigger" data-target="capabilities">
-        <i data-lucide="cpu"></i> Capabilities
+        <i data-lucide="package"></i> User Kit
       </button>
     </nav>
 
@@ -616,56 +616,332 @@
     </div>
   </div>
 
-  <!-- Page View 5: System Capabilities Page -->
+  <!-- Page View 5: User Kit — Detailed Tech Stack, Implementation Steps & Flowchart -->
   <div id="tab-capabilities" class="page-tab">
-    <div class="content-container">
-      <section class="glass-panel page-card">
-        <div class="page-header">
-          <div class="header-icon-box">
-            <i data-lucide="cpu"></i>
+    <div class="unbot-hero-container">
+      <!-- Starfield Particle Effect -->
+      <div class="starfield">
+        <div class="star star-1"></div>
+        <div class="star star-2"></div>
+        <div class="star star-3"></div>
+        <div class="star star-4"></div>
+        <div class="star star-5"></div>
+      </div>
+
+      <!-- Vertical Accent Line (Left Margin) -->
+      <div class="vertical-accent-line">
+        <div class="line-dot"></div>
+        <span class="vertical-label">USER KIT</span>
+      </div>
+
+      <!-- Main Hero Grid Layout -->
+      <div class="unbot-hero-content">
+        <!-- Left Column: User Kit Overview -->
+        <div class="hero-left-col">
+          <h1 class="page-serif-title hero-title-large">
+            Developer <span class="highlight-word">User Kit</span>
+          </h1>
+
+          <p class="unbot-subheadline">
+            Everything you need to understand, set up, and run the Nexus AI Voice Agent — from the tech stack and why each tool was chosen, to the exact steps to build it yourself, and how the entire system works end-to-end.
+          </p>
+
+          <!-- Single Connected Pill Segmented Group -->
+          <div class="unbot-single-pill-group">
+            <button class="pill-segment active" data-target="capabilities">1. Tech Stack</button>
+            <button class="pill-segment nav-trigger" data-target="guide">2. Setup Guide</button>
+            <button class="pill-segment nav-trigger" data-target="about">3. About Us</button>
           </div>
-          <div>
-            <h1 class="page-serif-title inner-page-title">
-              System <span class="highlight-word">capabilities</span> & features
-            </h1>
-            <p class="subtitle">Core engineering deliverables, tool integrations, and architecture specs</p>
+
+          <!-- Release Indicator -->
+          <div class="release-indicator">
+            <span class="pulse-dot"></span>
+            <span>Nexus AI &bull; Full-Stack Voice Agent &bull; Python + JS</span>
           </div>
         </div>
 
-        <div class="objectives-list">
-          <div class="objective-item">
-            <div class="obj-number">01</div>
-            <div class="obj-content">
-              <h3>Full-Duplex Binary WebSocket Audio Streaming</h3>
-              <p>Eliminates turn latency by streaming micro-chunk binary WebM audio over WebSockets for natural, real-time speech responses.</p>
+        <!-- Right Column: Tech Stack Summary Card -->
+        <div class="hero-right-col">
+          <div class="glass-panel guide-architecture-card transparent-glass-card">
+            <div class="arch-card-header">
+              <div class="arch-title">
+                <i data-lucide="layers"></i>
+                <span>Tech Stack Overview</span>
+              </div>
+              <span class="arch-badge-live"><span class="pulse-dot"></span> Production</span>
             </div>
-          </div>
 
-          <div class="objective-item">
-            <div class="obj-number">02</div>
-            <div class="obj-content">
-              <h3>Native Function Calling & Real-World Skill Execution</h3>
-              <p>Empowers the AI assistant to autonomously run tools like live Weather forecasting (`wttr.in`) and Google News RSS feed queries.</p>
+            <div class="arch-specs-grid">
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Backend Framework</span>
+                <span class="spec-value">FastAPI (Python)</span>
+              </div>
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">AI / LLM Engine</span>
+                <span class="spec-value">Google Gemini Flash</span>
+              </div>
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Real-Time Transport</span>
+                <span class="spec-value">WebSockets Duplex</span>
+              </div>
+              <div class="arch-spec-box transparent-glass-box">
+                <span class="spec-label">Database</span>
+                <span class="spec-value">SQLite (Local File)</span>
+              </div>
             </div>
-          </div>
 
-          <div class="objective-item">
-            <div class="obj-number">03</div>
-            <div class="obj-content">
-              <h3>SQLite Multi-Thread Session Memory</h3>
-              <p>Stores conversation turns in SQLite database (`voice_agent.db`), supporting persistent multi-session thread switching in the sidebar.</p>
-            </div>
-          </div>
-
-          <div class="objective-item">
-            <div class="obj-number">04</div>
-            <div class="obj-content">
-              <h3>Zero-Key Free Tier Fallbacks</h3>
-              <p>Features zero-key fallback engines including Google Free Speech Recognition, `gTTS` audio synthesis, and RSS feeds.</p>
+            <div class="arch-skills-list">
+              <div class="skills-list-title">
+                <i data-lucide="check-circle-2"></i>
+                <span>Integrated Services</span>
+              </div>
+              <ul class="skills-bullet-list">
+                <li><i data-lucide="mic"></i> <strong>STT:</strong> SpeechRecognition (free) / AssemblyAI</li>
+                <li><i data-lucide="volume-2"></i> <strong>TTS:</strong> gTTS (free) / Murf API</li>
+                <li><i data-lucide="sun"></i> <strong>Weather:</strong> wttr.in (free, 0 keys)</li>
+                <li><i data-lucide="newspaper"></i> <strong>News:</strong> Google News RSS (free)</li>
+              </ul>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- SECTION 1: TECH STACK — WHAT, WHY & HOW       -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="guide-cards-grid">
+        <!-- FastAPI -->
+        <div class="unbot-card floating-pinned-card card-float-1 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Backend</div>
+          <div class="card-icon-box"><i data-lucide="server"></i></div>
+          <h3>FastAPI (Python)</h3>
+          <p><strong>What:</strong> A modern, high-performance Python web framework.</p>
+          <p><strong>Why:</strong> It has built-in WebSocket support, automatic API documentation, and async capabilities — perfect for real-time audio streaming.</p>
+          <p><strong>How:</strong> Serves the HTML frontend, handles HTTP API routes (<code>/agent/chat</code>, <code>/generate-tts</code>), and manages the WebSocket endpoint (<code>/ws/stream-audio</code>) for live audio.</p>
+        </div>
+
+        <!-- Google Gemini -->
+        <div class="unbot-card floating-pinned-card card-float-2 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">AI Engine</div>
+          <div class="card-icon-box"><i data-lucide="sparkles"></i></div>
+          <h3>Google Gemini Flash LLM</h3>
+          <p><strong>What:</strong> Google's multimodal AI model with native function calling.</p>
+          <p><strong>Why:</strong> Gemini supports <em>automatic function calling</em> — the model can decide on its own when to call tools like weather or news, without manual routing.</p>
+          <p><strong>How:</strong> The Python SDK (<code>google-generativeai</code>) registers Python functions as tools. Gemini calls them autonomously during a conversation, then returns the combined answer.</p>
+        </div>
+
+        <!-- WebSockets -->
+        <div class="unbot-card floating-pinned-card card-float-3 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Transport</div>
+          <div class="card-icon-box"><i data-lucide="zap"></i></div>
+          <h3>WebSocket Audio Streaming</h3>
+          <p><strong>What:</strong> A full-duplex, persistent connection between the browser and server.</p>
+          <p><strong>Why:</strong> Regular HTTP uploads the entire recording at once (slow). WebSockets stream binary audio chunks in real-time as you speak, reducing latency.</p>
+          <p><strong>How:</strong> Browser's <code>MediaRecorder</code> captures mic audio → sends binary chunks via WebSocket → server buffers them → on "stop" event, processes the complete audio through STT → LLM → TTS pipeline.</p>
+        </div>
+
+        <!-- Speech-to-Text -->
+        <div class="unbot-card floating-pinned-card card-float-1 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">STT</div>
+          <div class="card-icon-box"><i data-lucide="mic"></i></div>
+          <h3>Speech-to-Text (STT)</h3>
+          <p><strong>What:</strong> Converts your spoken voice into text.</p>
+          <p><strong>Why:</strong> Two options — <em>SpeechRecognition</em> (100% free, zero API keys) or <em>AssemblyAI</em> (higher accuracy, paid key).</p>
+          <p><strong>How:</strong> Audio bytes are converted to WAV using <code>pydub</code>, then sent to Google's free recognition engine. If an AssemblyAI key is provided, it uses that instead for better quality.</p>
+        </div>
+
+        <!-- Text-to-Speech -->
+        <div class="unbot-card floating-pinned-card card-float-2 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">TTS</div>
+          <div class="card-icon-box"><i data-lucide="volume-2"></i></div>
+          <h3>Text-to-Speech (TTS)</h3>
+          <p><strong>What:</strong> Converts the AI's text reply back into spoken audio.</p>
+          <p><strong>Why:</strong> <em>gTTS</em> is 100% free (no key). <em>Murf API</em> provides premium, natural-sounding voices when a key is available.</p>
+          <p><strong>How:</strong> <code>gTTS</code> generates an MP3 file saved to <code>static/audio/</code> and served to the browser. If a Murf key exists, it calls the Murf REST API instead for higher-quality voice.</p>
+        </div>
+
+        <!-- SQLite -->
+        <div class="unbot-card floating-pinned-card card-float-3 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Database</div>
+          <div class="card-icon-box"><i data-lucide="database"></i></div>
+          <h3>SQLite Persistent Memory</h3>
+          <p><strong>What:</strong> A file-based relational database (<code>voice_agent.db</code>).</p>
+          <p><strong>Why:</strong> No external database server needed. SQLite runs inside the Python process, stores data permanently on disk, and survives server restarts.</p>
+          <p><strong>How:</strong> Two tables — <code>sessions</code> (tracks chat threads) and <code>messages</code> (stores every user/assistant turn). The full conversation history is loaded before each LLM call so Gemini has context.</p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- SECTION 2: IMPLEMENTATION STEPS                -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="userkit-section-header">
+        <i data-lucide="list-ordered"></i>
+        <h2>Implementation Steps</h2>
+        <p>How this project was built, step by step — in plain English.</p>
+      </div>
+
+      <div class="guide-cards-grid">
+        <!-- Step 1 -->
+        <div class="unbot-card floating-pinned-card card-float-1 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 01</div>
+          <div class="card-icon-box"><i data-lucide="folder-plus"></i></div>
+          <h3>Project Setup & Dependencies</h3>
+          <p>Created a Python project folder. Installed all required packages using <code>pip</code>:</p>
+          <ul class="card-bullet-list">
+            <li><code>fastapi</code> + <code>uvicorn</code> — the web server</li>
+            <li><code>google-generativeai</code> — Gemini SDK</li>
+            <li><code>SpeechRecognition</code> + <code>pydub</code> — free STT</li>
+            <li><code>gTTS</code> — free text-to-speech</li>
+            <li><code>python-dotenv</code> — loads <code>.env</code> API keys</li>
+            <li><code>feedparser</code> — parses Google News RSS</li>
+          </ul>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="unbot-card floating-pinned-card card-float-2 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 02</div>
+          <div class="card-icon-box"><i data-lucide="database"></i></div>
+          <h3>Database Layer (<code>db.py</code>)</h3>
+          <p>Built the SQLite database with two tables:</p>
+          <ul class="card-bullet-list">
+            <li><strong>sessions</strong> — stores each chat thread's unique ID and creation timestamp</li>
+            <li><strong>messages</strong> — stores every turn (user/assistant) with a foreign key to the session</li>
+          </ul>
+          <p>Functions created: <code>init_db()</code>, <code>save_message()</code>, <code>get_history()</code>, <code>clear_history()</code>, and <code>list_sessions_with_preview()</code>.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="unbot-card floating-pinned-card card-float-3 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 03</div>
+          <div class="card-icon-box"><i data-lucide="mic"></i></div>
+          <h3>Speech-to-Text Service (<code>stt_service.py</code>)</h3>
+          <p>Created a <code>transcribe_bytes()</code> function that:</p>
+          <ul class="card-bullet-list">
+            <li>Checks if an AssemblyAI API key exists — if yes, uses it for high-quality transcription</li>
+            <li>If no key, falls back to <code>SpeechRecognition</code> (Google's free engine)</li>
+            <li>Audio bytes are converted to WAV format using <code>pydub</code> for compatibility</li>
+          </ul>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="unbot-card floating-pinned-card card-float-1 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 04</div>
+          <div class="card-icon-box"><i data-lucide="sparkles"></i></div>
+          <h3>LLM Service with Tool Calling (<code>llm_service.py</code>)</h3>
+          <p>The brain of the system. Built a <code>call_llm_conversation()</code> function that:</p>
+          <ul class="card-bullet-list">
+            <li>Configures the Gemini SDK with your API key</li>
+            <li>Registers two Python functions as native tools: <code>get_weather(city)</code> and <code>get_news()</code></li>
+            <li>Passes the full conversation history so Gemini remembers past turns</li>
+            <li>Enables <code>automatic_function_calling=True</code> — Gemini decides when to call tools on its own</li>
+            <li>Tries multiple model candidates (<code>gemini-flash-latest</code>, <code>gemini-3.6-flash</code>, etc.) as fallbacks</li>
+          </ul>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="unbot-card floating-pinned-card card-float-2 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 05</div>
+          <div class="card-icon-box"><i data-lucide="volume-2"></i></div>
+          <h3>Text-to-Speech Service (<code>tts_service.py</code>)</h3>
+          <p>Created a <code>generate_tts_from_text()</code> function that:</p>
+          <ul class="card-bullet-list">
+            <li>Tries Murf API first (premium voices) if a key is provided</li>
+            <li>Falls back to <code>gTTS</code> (Google Text-to-Speech, 100% free)</li>
+            <li>Saves the generated MP3 to <code>static/audio/</code> and returns the URL for the browser to play</li>
+          </ul>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="unbot-card floating-pinned-card card-float-3 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 06</div>
+          <div class="card-icon-box"><i data-lucide="server"></i></div>
+          <h3>FastAPI Server & WebSocket (<code>main.py</code>)</h3>
+          <p>The main server file that wires everything together:</p>
+          <ul class="card-bullet-list">
+            <li><strong>HTTP Route</strong> (<code>/agent/chat/{session_id}</code>) — accepts uploaded audio, runs the full STT → LLM → TTS pipeline, returns JSON</li>
+            <li><strong>WebSocket Route</strong> (<code>/ws/stream-audio</code>) — accepts live binary audio chunks, buffers them, and on "stop" runs the same pipeline over the socket</li>
+            <li><strong>Session Routes</strong> — list sessions, get history, clear history</li>
+            <li>Serves static files (CSS, JS, audio) and HTML templates via Jinja2</li>
+          </ul>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="unbot-card floating-pinned-card card-float-1 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 07</div>
+          <div class="card-icon-box"><i data-lucide="monitor"></i></div>
+          <h3>Frontend UI (<code>index.html</code> + <code>scripts.js</code>)</h3>
+          <p>The browser-side interface:</p>
+          <ul class="card-bullet-list">
+            <li>Uses <code>MediaRecorder</code> API to capture microphone audio in WebM format</li>
+            <li>Opens a WebSocket connection and streams binary audio chunks in real-time</li>
+            <li>Sends a <code>{"event":"stop"}</code> message when recording ends</li>
+            <li>Receives the AI response (transcript + text + audio URL) and plays the audio automatically</li>
+            <li>Displays chat bubbles, manages sidebar session threads, and handles API key settings</li>
+          </ul>
+        </div>
+
+        <!-- Step 8 -->
+        <div class="unbot-card floating-pinned-card card-float-2 transparent-glass-card">
+          <div class="card-pin-badge"><i data-lucide="pin" class="pin-icon"></i></div>
+          <div class="step-num-pill">Step 08</div>
+          <div class="card-icon-box"><i data-lucide="play"></i></div>
+          <h3>Run the Server</h3>
+          <p>Start the entire application with one command:</p>
+          <div class="card-tip-tag"><i data-lucide="terminal"></i> <code>uvicorn main:app --reload --port 8000</code></div>
+          <p>Then open <strong>http://localhost:8000</strong> in your browser. Click the mic button, speak, and hear the AI respond!</p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- SECTION 3: HOW IT WORKS — ARCHITECTURE FLOW    -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="userkit-section-header">
+        <i data-lucide="git-branch"></i>
+        <h2>How It Works — Architecture Flow</h2>
+        <p>End-to-end data flow from your voice to the AI response.</p>
+      </div>
+
+      <div class="userkit-flowchart-wrapper">
+        <img src="/static/flowchart.png" alt="Nexus AI Voice Agent Architecture Flowchart" class="userkit-flowchart-img" />
+      </div>
+
+      <!-- Flow Steps Explanation -->
+      <div class="guide-cards-grid">
+        <div class="unbot-card floating-pinned-card card-float-1 transparent-glass-card">
+          <div class="step-num-pill">Flow 1→3</div>
+          <div class="card-icon-box"><i data-lucide="mic"></i></div>
+          <h3>Voice Capture → WebSocket Stream</h3>
+          <p>You click the mic and speak. Your browser captures audio using <code>MediaRecorder</code>, then streams binary chunks over a persistent WebSocket connection to the FastAPI server in real-time.</p>
+        </div>
+
+        <div class="unbot-card floating-pinned-card card-float-2 transparent-glass-card">
+          <div class="step-num-pill">Flow 4</div>
+          <div class="card-icon-box"><i data-lucide="cpu"></i></div>
+          <h3>Backend Processing Pipeline</h3>
+          <p>The server buffers all audio chunks. When you stop recording, it runs: <strong>STT</strong> (voice → text) → saves to <strong>SQLite</strong> → sends history to <strong>Gemini LLM</strong> (which may autonomously call weather/news tools) → generates <strong>TTS</strong> audio from the AI reply.</p>
+        </div>
+
+        <div class="unbot-card floating-pinned-card card-float-3 transparent-glass-card">
+          <div class="step-num-pill">Flow 5→6</div>
+          <div class="card-icon-box"><i data-lucide="volume-2"></i></div>
+          <h3>Response → Audio Playback</h3>
+          <p>The complete response (transcript, AI text, and audio URL) is sent back over the WebSocket. Your browser receives it, displays the chat bubble, and automatically plays the synthesized voice — completing the conversation loop.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 

@@ -2408,6 +2408,56 @@ input:checked + .toggle-slider:before {
   justify-content: flex-end;
 }
 
+/* User Kit Page: Section Headers */
+.userkit-section-header {
+  width: 100%;
+  text-align: center;
+  padding: 60px 24px 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.userkit-section-header i {
+  width: 32px;
+  height: 32px;
+  color: var(--accent-magenta);
+  margin-bottom: 12px;
+}
+
+.userkit-section-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.userkit-section-header p {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* User Kit Flowchart Image */
+.userkit-flowchart-wrapper {
+  width: 100%;
+  max-width: 780px;
+  margin: 20px auto 40px;
+  padding: 4px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(217, 70, 239, 0.25), rgba(56, 189, 248, 0.15));
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 2;
+}
+
+.userkit-flowchart-img {
+  width: 100%;
+  border-radius: 22px;
+  display: block;
+}
+
 .app-footer {
   text-align: center;
   font-size: 0.85rem;
